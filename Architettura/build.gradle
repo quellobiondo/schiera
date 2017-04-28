@@ -1,0 +1,54 @@
+apply plugin: 'application'
+
+mainClassName = 'it.unibo.ai.didattica.mulino.engine.Engine'
+applicationName = 'serverMulino'
+applicationDefaultJvmArgs = ["-Dmyapp.config.file=/etc/myapp/conf.properties"]
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/java']
+        }
+        resources {
+            srcDirs = ['src/resources']
+        }
+    }
+}
+
+task runServer(type: JavaExec, dependsOn: build) {
+    doFirst{
+        println "Starting server..."
+    }
+
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'it.unibo.ai.didattica.mulino.engine.Engine'
+
+    // parametri Engine
+    // 1) int timeout   : default 60
+    // 2) int cacheSize : default 16
+    args 60
+}
+
+task runHumanWhite(type: JavaExec, dependsOn: build) {
+    doFirst{
+        println "Starting white player..."
+    }
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'it.unibo.ai.didattica.mulino.client.MulinoHumanClient'
+
+    // parametri Player
+    // 1) String colore : White|Black
+    args 'White'
+}
+
+task runHumanBlack(type: JavaExec, dependsOn: build) {
+    doFirst{
+        println "Starting black player..."
+    }
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'it.unibo.ai.didattica.mulino.client.MulinoHumanClient'
+
+    // parametri Player
+    // 1) String colore : White|Black
+    args 'Black'
+}
