@@ -1,5 +1,6 @@
 dependencies {
     compile project(':Architettura')
+    //compile fileTree(dir: '../Documents/Java/lib/aima', include: 'aima-core.jar')
 }
 
 sourceSets {
