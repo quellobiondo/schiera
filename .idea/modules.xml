@@ -2,7 +2,15 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Architettura/Architettura.iml" filepath="$PROJECT_DIR$/.idea/modules/Architettura/Architettura.iml" group="Architettura" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Architettura/Architettura_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Architettura/Architettura_main.iml" group="Architettura" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Architettura/Architettura_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Architettura/Architettura_test.iml" group="Architettura" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MyAgente/MyAgente.iml" filepath="$PROJECT_DIR$/.idea/modules/MyAgente/MyAgente.iml" group="MyAgente" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MyAgente/MyAgente_main.iml" filepath="$PROJECT_DIR$/.idea/modules/MyAgente/MyAgente_main.iml" group="MyAgente" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MyAgente/MyAgente_test.iml" filepath="$PROJECT_DIR$/.idea/modules/MyAgente/MyAgente_test.iml" group="MyAgente" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/schiera.iml" filepath="$PROJECT_DIR$/.idea/modules/schiera.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/schiera_main.iml" filepath="$PROJECT_DIR$/.idea/modules/schiera_main.iml" group="schiera" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/schiera_test.iml" filepath="$PROJECT_DIR$/.idea/modules/schiera_test.iml" group="schiera" />
     </modules>
   </component>
 </project>
