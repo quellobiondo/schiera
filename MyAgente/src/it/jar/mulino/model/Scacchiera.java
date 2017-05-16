@@ -1,7 +1,8 @@
 package it.jar.mulino.model;
 
-import static it.jar.mulino.model.Casella.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class Scacchiera implements Cloneable, Iterable<Casella> {
 	byte[][] campo=new byte[3][8];

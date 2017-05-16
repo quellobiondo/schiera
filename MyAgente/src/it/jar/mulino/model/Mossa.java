@@ -1,9 +1,15 @@
 package it.jar.mulino.model;
 
-import java.io.*;
-import java.util.*;
-import java.util.stream.*;
 import aima.core.agent.*;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public abstract class Mossa implements Action {
 	protected final Scacchiera s;
@@ -19,7 +25,7 @@ public abstract class Mossa implements Action {
 			String s2=s.toString();
 			System.out.println(unifica(s1,s2));
 		} else
-			throw new IllegalArgumentException("Questa mossa non è stata pensata con le pedine in queste posizioni");
+			throw new IllegalArgumentException("Questa mossa non Ã¨ stata pensata con le pedine in queste posizioni");
 	}
 	public void apply(){
 		apply(s);

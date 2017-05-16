@@ -6,7 +6,7 @@ public class Mossa1 extends Mossa {
 	public Mossa1(Scacchiera s, byte g, Casella c){
 		super(s);
 		assert g==Casella.BIANCA || g==Casella.NERA;
-		this.c=c;
+		this.c = c;
 		this.g=g;
 	}
 	protected byte giocatoreDiTurno(){

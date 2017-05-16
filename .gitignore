@@ -1,4 +1,7 @@
-*/*.idea
-*/*.iml
-*/*.ipr
-*/*.iws
+.idea/**
+MyAgente/build/*
+**/*.idea
+**/*.iml
+**/*.ipr
+**/*.iws
+out*

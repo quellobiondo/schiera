@@ -51,7 +51,7 @@ public class Stato {
 	/**@param g - il giocatore di cui si vuole indagare la vittoria
 	 * @return
 	 * +1 se si ha vinto<br>
-	 * 0 se il gioco non è finito<br>
+	 * 0 se il gioco non Ã¨ finito<br>
 	 * -1 se si ha perso
 	 */
 	public byte vittoria(byte g){
