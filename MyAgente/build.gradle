@@ -4,7 +4,8 @@ repositories {
 
 dependencies {
     compile project(':Architettura')
-    // https://mvnrepository.com/artifact/commons-cli/commons-cli
+    compile 'com.googlecode.aima-java:aima-core:3.0.0'
+    // parsing argomenti
     compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
     // logger
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
@@ -44,3 +45,4 @@ task runBlack(type: JavaExec, dependsOn: build) {
     // parametri
     args "Black"
 }
+>>>>>>> development
