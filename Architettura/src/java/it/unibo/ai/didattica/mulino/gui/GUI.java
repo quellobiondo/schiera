@@ -26,6 +26,7 @@ public class GUI {
 		mainFrame = new Background();
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setSize(280, 300);
+		mainFrame.setAlwaysOnTop(true);
 	}
 	
 	private void show() {

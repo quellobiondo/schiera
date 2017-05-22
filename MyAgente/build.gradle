@@ -45,4 +45,3 @@ task runBlack(type: JavaExec, dependsOn: build) {
     // parametri
     args "Black"
 }
->>>>>>> development

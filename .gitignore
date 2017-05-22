@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .idea
 MyAgente/build
 **/*.idea
@@ -6,3 +7,10 @@ MyAgente/build
 **/*.iws
 out*
 .gradle/**
+=======
+*/*.idea
+*/*.iml
+*/*.ipr
+*/*.iws
+/.gradle/
+>>>>>>> fafa9bf0d13b1b533e4709ac8c054b3015dc0bfa
