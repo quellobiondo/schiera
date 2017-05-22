@@ -4,11 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.UnknownHostException;
-
-import it.unibo.ai.didattica.mulino.actions.Action;
-import it.unibo.ai.didattica.mulino.actions.Phase1Action;
-import it.unibo.ai.didattica.mulino.actions.Phase2Action;
-import it.unibo.ai.didattica.mulino.actions.PhaseFinalAction;
+import it.unibo.ai.didattica.mulino.actions.*;
 import it.unibo.ai.didattica.mulino.domain.State;
 import it.unibo.ai.didattica.mulino.domain.State.Checker;
 import it.unibo.ai.didattica.mulino.domain.State.Phase;
@@ -19,7 +15,31 @@ public class MulinoHumanClient extends MulinoClient {
 		super(player);
 		// TODO Auto-generated constructor stub
 	}
-
+	
+	private static Class<?> fase(State s){
+		switch (s.getCurrentPhase()){
+		case FIRST: return Phase1.class;
+		case SECOND: return Phase2.class;
+		case FINAL: return PhaseFinal.class;
+		}
+		return null;
+	}
+	private static Action chiediMossa(State cs, BufferedReader in) throws IOException{
+		Action a=null;
+		while (true){
+			System.out.println("do your move: ");
+			String actionString = in.readLine();
+			a = stringToAction(actionString, cs.getCurrentPhase());
+			try{
+				fase(cs).getMethod("applyMove",State.class,Action.class,State.Checker.class).invoke(null,cs,a,Checker.WHITE);
+				break;
+			} catch (Exception e){
+				e.printStackTrace();
+				System.out.println("mossa scritta male");
+			}
+		}
+		return a;
+	}
 	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
 		State.Checker player;
 
@@ -45,9 +65,7 @@ public class MulinoHumanClient extends MulinoClient {
 			System.out.println(currentState.toString());
 			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 			while (true) {
-				System.out.println("Player " + client.getPlayer().toString() + ", do your move: ");
-				actionString = in.readLine();
-				action = stringToAction(actionString, currentState.getCurrentPhase());
+				action=chiediMossa(currentState,in);
 				client.write(action);
 				currentState = client.read();
 				System.out.println("Effect of your move: ");
@@ -69,9 +87,10 @@ public class MulinoHumanClient extends MulinoClient {
 				currentState = client.read();
 				System.out.println("Your Opponent did his move, and the result is: ");
 				System.out.println(currentState.toString());
-				System.out.println("Player " + client.getPlayer().toString() + ", do your move: ");
-				actionString = in.readLine();
-				action = stringToAction(actionString, currentState.getCurrentPhase());
+				action=chiediMossa(currentState,in);
+//				System.out.println("Player " + client.getPlayer().toString() + ", do your move: ");
+//				actionString = in.readLine();
+//				action = stringToAction(actionString, currentState.getCurrentPhase());
 				client.write(action);
 				currentState = client.read();
 				System.out.println("Effect of your move: ");
