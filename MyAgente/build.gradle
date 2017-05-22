@@ -1,0 +1,48 @@
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':Architettura')
+    compile 'com.googlecode.aima-java:aima-core:3.0.0'
+    // parsing argomenti
+    compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
+    // logger
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+        resources {
+            srcDirs = ['src']
+        }
+    }
+}
+
+task runWhite(type: JavaExec, dependsOn: build) {
+    doFirst{
+    println "Starting MyAgent white..."
+    }
+
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'it.jar.mulino.Main'
+
+    // parametri
+    args "White"
+}
+
+task runBlack(type: JavaExec, dependsOn: build) {
+    doFirst{
+    println "Starting MyAgent black..."
+    }
+
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'it.jar.mulino.Main'
+
+    // parametri
+    args "Black"
+}
+>>>>>>> development
