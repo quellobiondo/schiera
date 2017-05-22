@@ -33,7 +33,7 @@ public class GiocatoreUmano extends Giocatore {
             if(stato.canJump(Stato.NOI)){
                 System.out.println("da a [Posizione pedina rimossa]");
                 return leggiMossaFaseTre();
-            }else {
+            }else{
                 System.out.println("da a [Posizione pedina rimossa]");
                 return leggiMossaFaseDue();
             }
@@ -41,7 +41,7 @@ public class GiocatoreUmano extends Giocatore {
     }
 
     @Override
-    public void updateState(Stato stato) {
+    public void updateState(Stato stato){
         this.stato = stato;
     }
 }

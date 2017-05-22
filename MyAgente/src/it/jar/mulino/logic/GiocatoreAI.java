@@ -1,8 +1,6 @@
 package it.jar.mulino.logic;
 
-import it.jar.mulino.model.Mossa;
-import it.jar.mulino.model.Stato;
-import it.unibo.ai.didattica.mulino.domain.State;
+import it.jar.mulino.model.*;
 
 /**
  * Created by ziro on 22/05/17.
@@ -11,7 +9,7 @@ public class GiocatoreAI extends Giocatore implements Runnable{
 
     private Mossa mossaKiller;
     private Stato statoAttuale;
-
+    private boolean statoCambiato;
     private boolean primoAGiocare;
 
     private GiocatoreAI(Stato stato, boolean isBianco){
@@ -19,7 +17,7 @@ public class GiocatoreAI extends Giocatore implements Runnable{
         primoAGiocare = isBianco;
     }
 
-    //crea uno pseudo-attore attivo
+    /**crea uno pseudo-attore attivo*/
     public static GiocatoreAI create(Stato stato, boolean isBianco){
         GiocatoreAI giocatore = new GiocatoreAI(stato, isBianco);
         new Thread(giocatore).start();
@@ -32,12 +30,13 @@ public class GiocatoreAI extends Giocatore implements Runnable{
     }
 
     @Override
-    public void updateState(Stato stato) {
+    public void updateState(Stato stato){
         this.statoAttuale = stato;
+        statoCambiato=true;
     }
 
     @Override
-    public void run() {
+    public void run(){
         while(true){
             //esplora l'albero per ottenere la mossa migliore
             //setta la mossa migliore

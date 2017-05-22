@@ -1,16 +1,13 @@
 package it.jar.mulino;
 
-import it.jar.mulino.logic.GiocatoreAI;
-import it.jar.mulino.logic.GiocatoreUmano;
-import it.jar.mulino.model.Stato;
-import it.jar.mulino.utils.GameManagerBuilder;
-import it.unibo.ai.didattica.mulino.domain.State;
+import java.io.*;
+import java.util.*;
+import it.jar.mulino.logic.*;
+import it.jar.mulino.model.*;
+import it.jar.mulino.utils.*;
+import it.unibo.ai.didattica.mulino.domain.*;
 import org.apache.commons.cli.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.Arrays;
+import org.slf4j.*;
 
 /**
  * Created by ziro on 26/04/17.
@@ -52,7 +49,7 @@ public class Main {
              boolean whiteFlag = line.hasOption("w") || line.hasOption("White") || (args.length > 0 && args[0].equals("White"));
              boolean blackFlag = line.hasOption("b") || line.hasOption("Black") || (args.length > 0 && args[0].equals("Black"));
             if(!whiteFlag && !blackFlag) abort("Usage error: indicare se bianco (w) o nero (b)");
-            if(whiteFlag && blackFlag)   abort("Usage error: il giocatore non puÃ² essere bianco e nero");
+            if(whiteFlag && blackFlag)   abort("Usage error: il giocatore non può essere bianco e nero");
             if(whiteFlag)                builder.setChecker(State.Checker.WHITE);
             if(blackFlag)                builder.setChecker(State.Checker.BLACK);
             /**
@@ -74,9 +71,9 @@ public class Main {
         builder.build().loopGioco(); //creo il manager della partita e avvio il gioco
     }
 
-    public static void main (String [] args) throws IOException {
+    public static void main(String [] args) throws IOException {
         logger.debug("Inizializzazione");
         parseArgs(args);  // inizializzo leggendo gli argomenti
-        startGame();      // avvio il gioco
-    }
+		startGame(); // avvio il gioco
+	}
 }
