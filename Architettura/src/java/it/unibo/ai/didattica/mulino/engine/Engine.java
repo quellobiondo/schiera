@@ -167,13 +167,13 @@ public class Engine {
 				}
 
 				// LOOP CHECK WITH STATES
-				// A cache of n states. If the same state appears, exit
+				// A cache of n states. If the same model appears, exit
 
 				if (recentstates.contains(currentState)) {
 					System.out.println("\n\nLOOOP!!!");
 					System.out.println(currentState);
 					System.out.println(
-							"Same state " + (recentstates.size() - recentstates.indexOf(currentState)) + " state ago");
+							"Same model " + (recentstates.size() - recentstates.indexOf(currentState)) + " model ago");
 					System.exit(0);
 				}
 				recentstates.add(currentState);

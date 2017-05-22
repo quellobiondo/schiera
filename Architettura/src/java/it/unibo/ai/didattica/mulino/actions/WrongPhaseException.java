@@ -11,6 +11,6 @@ public class WrongPhaseException extends Exception {
 
 	public WrongPhaseException(State.Phase requested, State.Phase found) {
 		super("Requeste to apply an action of Phase " + requested.toString() +
-				" to a state in Phase " + found.toString() + "!");
+				" to a model in Phase " + found.toString() + "!");
 	}
 }

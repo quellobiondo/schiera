@@ -153,7 +153,7 @@ public class Util {
 	
 	
 	/**
-	 * Given a state, and the position where a checker has been put/move,
+	 * Given a model, and the position where a checker has been put/move,
 	 * it returns true if the action generated a vertical/horizontal triple
 	 * @param newState
 	 * @param position

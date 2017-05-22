@@ -40,7 +40,7 @@ public class MulinoHumanClient extends MulinoClient {
 		if (player == State.Checker.WHITE) {
 			MulinoClient client = new MulinoHumanClient(State.Checker.WHITE);
 			System.out.println("You are player " + client.getPlayer().toString() + "!");
-			System.out.println("Current state:");
+			System.out.println("Current model:");
 			currentState = client.read();
 			System.out.println(currentState.toString());
 			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -62,7 +62,7 @@ public class MulinoHumanClient extends MulinoClient {
 			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 			currentState = client.read();
 			System.out.println("You are player " + client.getPlayer().toString() + "!");
-			System.out.println("Current state:");
+			System.out.println("Current model:");
 			System.out.println(currentState.toString());
 			while (true) {
 				System.out.println("Waiting for your opponent move...");

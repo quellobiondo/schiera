@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="Architettura_main" target="1.8" />
+      <module name="Architettura_test" target="1.8" />
+      <module name="MyAgente_main" target="1.8" />
+      <module name="MyAgente_test" target="1.8" />
+      <module name="schiera_main" target="1.8" />
+      <module name="schiera_test" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
