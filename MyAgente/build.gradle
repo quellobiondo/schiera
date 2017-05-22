@@ -1,5 +1,13 @@
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     compile project(':Architettura')
+    // https://mvnrepository.com/artifact/commons-cli/commons-cli
+    compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
+    // logger
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 }
 
 sourceSets {
@@ -13,14 +21,26 @@ sourceSets {
     }
 }
 
-task runAgent(type: JavaExec, dependsOn: build) {
+task runWhite(type: JavaExec, dependsOn: build) {
     doFirst{
-        println "Starting MyAgent..."
+    println "Starting MyAgent white..."
     }
 
     classpath = sourceSets.main.runtimeClasspath
     main = 'it.jar.mulino.Main'
 
     // parametri
-    // args 60
+    args "White"
+}
+
+task runBlack(type: JavaExec, dependsOn: build) {
+    doFirst{
+    println "Starting MyAgent black..."
+    }
+
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'it.jar.mulino.Main'
+
+    // parametri
+    args "Black"
 }

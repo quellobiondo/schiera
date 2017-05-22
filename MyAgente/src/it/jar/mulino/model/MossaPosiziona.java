@@ -3,7 +3,7 @@ package it.jar.mulino.model;
 /**
  * Created by ziro on 09/05/17.
  */
-public class MossaPosiziona {
+public class MossaPosiziona extends Mossa {
 
     private byte posizione;
     private byte rimuovi = -1;

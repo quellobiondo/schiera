@@ -3,7 +3,7 @@ package it.jar.mulino.model;
 /**
  * Created by ziro on 09/05/17.
  */
-public class MossaSposta {
+public class MossaSposta extends Mossa  {
 
     private byte from, to, rimuovi;
 
