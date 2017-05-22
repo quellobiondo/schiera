@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.net.UnknownHostException;
 
 /**
+ * Gestore del loop di gioco
  * Created by ziro on 26/04/17.
  */
 public class GameManager extends MulinoClient{
