@@ -176,7 +176,7 @@ public class Stato implements Serializable, Comparable<Stato> {
 		}
 		return tot2piecesConfiguration;
 	}
-	public List<Mossa> getPossibleQuiescenceMoves(){
+/*	public List<Mossa> getPossibleQuiescenceMoves(){
 		if (this.phase1completed()&&!this.phase2completed()){
 			byte currentPlayer=this.currentPlayer;
 			byte opponentPlayer=this.opponentPlayer;
@@ -197,7 +197,7 @@ public class Stato implements Serializable, Comparable<Stato> {
 			return moves;
 		}
 		return getPossibleMoves();
-	}
+	}*/
 	public int numberOfPiecesBlocked(byte player){
 		if (this.phase1completed()&&this.count[player]==3){
 			return 0;

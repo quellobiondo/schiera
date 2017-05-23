@@ -35,16 +35,27 @@ public class GiocatoreAI extends Giocatore implements Runnable{
 
     @Override
     public Mossa getMove(){
-    	try{
-			Thread.sleep(DURATA_MOSSA);
-		} catch (InterruptedException e){}
+    	System.out.println("Dammi la tua mossa");
+        try{
+			Thread.sleep(5000);
+		} catch (InterruptedException e){
+    	    e.printStackTrace();
+        }
+        System.out.println("La mia mossa killer è "+mossaKiller);
         return mossaKiller;
     }
 
     @Override
     public void updateState(Stato stato){
         this.statoAttuale = stato;
+        checkMossaKiller(stato);
         statoCambiato=true;
+    }
+
+    private void checkMossaKiller(Stato stato){
+        if(mossaKiller==null || !stato.getPossibleMoves().contains(mossaKiller)){
+            mossaKiller = stato.getPossibleMoves().get(0); //patch
+        }
     }
 
     @Override
@@ -57,8 +68,9 @@ public class GiocatoreAI extends Giocatore implements Runnable{
 
             //pota l'albero se lo stato attuale della partita è cambiato
             if(statoCambiato){
+                checkMossaKiller(statoAttuale);
                 ricerca.statoAttualeAggiornato(statoAttuale);
-                statoCambiato = !statoCambiato;
+                statoCambiato = false;
                 depth = 3; //ricominciamo ad esplorare a profondità limitata
             }
         }
