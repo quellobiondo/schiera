@@ -6,13 +6,13 @@ public class Mangiata extends Mossa {
 		super(s);
 		this.c=c;
 	}
-	protected void muovi(Scacchiera s){
+	public void muovi(Scacchiera s){
 		s.togli(c.i,c.j);
 	}
-	protected Casella partenza(){
+	public Casella partenza(){
 		return null;
 	}
-	protected Casella destinazione(){
+	public Casella destinazione(){
 		return c;
 	}
 	public boolean tris(){

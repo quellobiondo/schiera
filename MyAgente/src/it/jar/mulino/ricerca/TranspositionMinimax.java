@@ -1,6 +1,9 @@
-package fr.avianey.minimax4j;
+package it.jar.mulino.ricerca;
 
-import java.lang.reflect.*;
+import it.jar.mulino.model.Mossa;
+
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.*;
 
 
@@ -28,7 +31,7 @@ import java.util.*;
  * An {@link Minimax} backed by a <a href="http://en.wikipedia.org/wiki/Transposition_table">transposition table</a>
  * to speed up the search of the game tree.<br/>
  * The transposition table will not be serialized with this instance.
- * 
+ *
  * @author antoine vianey
  *
  * @param <M> the {@link Move} grid
@@ -36,11 +39,11 @@ import java.util.*;
  * @param <G> the transposition group grid or {@link Void} if grouping is not necessary.
  * @see Transposition
  */
-public abstract class TranspositionMinimax<M extends Move, T, G extends Comparable<G>> extends Minimax<M> {
-	
+public abstract class TranspositionMinimax<T, G extends Comparable<G>> extends Minimax<Mossa> {
+
 	/**
 	 * Factory for transposition table.
-	 * Unless {@link TranspositionMinimax#TranspositionIA(fr.avianey.minimax4j.Minimax.Algorithm, TranspositionTableFactory)}
+	 * Unless {@link TranspositionMinimax#TranspositionIA(Algorithm, TranspositionTableFactory)}
 	 * is used as super constructor, an {@link HashMap} is used as default grid.
 	 * 
 	 * @author antoine vianey
@@ -117,11 +120,11 @@ public abstract class TranspositionMinimax<M extends Move, T, G extends Comparab
     }
     
     @Override
-    public M getBestMove(int depth) {
+    public Mossa getBestMove(int depth) {
     	if (clearGroupsBeforeSearch()) {
     		clearGroups(getGroup());
     	}
-        M m = super.getBestMove(depth);
+        Mossa m = super.getBestMove(depth);
     	if (clearGroupsAfterSearch()) {
     		clearGroups(getGroup());
     	}
@@ -133,7 +136,7 @@ public abstract class TranspositionMinimax<M extends Move, T, G extends Comparab
      * Default is true.
      * @return
      */
-    protected boolean useTranspositionTable() {
+    public boolean useTranspositionTable() {
     	return true;
     }
     
@@ -233,7 +236,7 @@ public abstract class TranspositionMinimax<M extends Move, T, G extends Comparab
      *=================*/
     
     @Override
-    protected double minimaxScore(int depth, int who) {
+    public double minimaxScore(int depth, int who) {
     	if (!useTranspositionTable()) {
     		return super.minimaxScore(depth, who);
     	}
@@ -253,7 +256,7 @@ public abstract class TranspositionMinimax<M extends Move, T, G extends Comparab
     }
 
     @Override
-    protected double alphabetaScore(int depth, int who, double alpha, double beta) {
+    public double alphabetaScore(int depth, int who, double alpha, double beta) {
     	if (!useTranspositionTable()) {
     		return super.alphabetaScore(depth, who, alpha, beta);
     	}
@@ -273,7 +276,7 @@ public abstract class TranspositionMinimax<M extends Move, T, G extends Comparab
     }
 
     @Override
-    protected double negamaxScore(int depth, double alpha, double beta) {
+    public double negamaxScore(int depth, double alpha, double beta) {
     	if (!useTranspositionTable()) {
     		return super.negamaxScore(depth, alpha, beta);
     	}
@@ -293,7 +296,7 @@ public abstract class TranspositionMinimax<M extends Move, T, G extends Comparab
     }
     
     @Override
-    protected double negascoutScore(boolean first, int depth, double alpha, double beta, double b) {
+    public double negascoutScore(boolean first, int depth, double alpha, double beta, double b) {
     	if (!useTranspositionTable()) {
     		return super.negascoutScore(first, depth, alpha, beta, b);
     	}

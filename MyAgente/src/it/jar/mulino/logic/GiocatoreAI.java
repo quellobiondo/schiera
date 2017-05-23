@@ -1,6 +1,8 @@
 package it.jar.mulino.logic;
 
 import it.jar.mulino.model.*;
+import it.jar.mulino.ricerca.Minimax;
+import it.jar.mulino.ricerca.NineMensMorrisSearch;
 
 /**
  * Created by ziro on 22/05/17.
@@ -9,18 +11,23 @@ public class GiocatoreAI extends Giocatore implements Runnable{
 
     private Mossa mossaKiller;
     private Stato statoAttuale;
+    private NineMensMorrisSearch ricerca;
+
     private boolean statoCambiato;
-    private boolean primoAGiocare;
 
     private GiocatoreAI(Stato stato, boolean isBianco){
         statoAttuale = stato;
-        primoAGiocare = isBianco;
+        stato.currentPlayer = isBianco ? stato.currentPlayer : stato.opponentPlayer;
+
+        ricerca = new NineMensMorrisSearch(Minimax.Algorithm.NEGASCOUT, stato);
     }
 
     /**crea uno pseudo-attore attivo*/
     public static GiocatoreAI create(Stato stato, boolean isBianco){
         GiocatoreAI giocatore = new GiocatoreAI(stato, isBianco);
-        new Thread(giocatore).start();
+        Thread thread = new Thread(giocatore);
+        //thread.setPriority(Thread.MAX_PRIORITY);
+        thread.start();
         return giocatore;
     }
 
@@ -37,10 +44,18 @@ public class GiocatoreAI extends Giocatore implements Runnable{
 
     @Override
     public void run(){
+        int depth = 3;
         while(true){
-            //esplora l'albero per ottenere la mossa migliore
-            //setta la mossa migliore
-            //pota l'albero in base allo stato attuale (può essere modificato anche dall'avversario)
+            //esplora l'albero iterativamente per ottenere la mossa migliore
+            depth++;
+            mossaKiller = ricerca.getBestMove(depth); //setta la mossa migliore
+
+            //pota l'albero se lo stato attuale della partita è cambiato
+            if(statoCambiato){
+                ricerca.statoAttualeAggiornato(statoAttuale);
+                statoCambiato = !statoCambiato;
+                depth = 3; //ricominciamo ad esplorare a profondità limitata
+            }
         }
     }
 }

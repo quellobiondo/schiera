@@ -1,5 +1,7 @@
 package it.jar.mulino.utils;
 
+import it.jar.mulino.model.Stato;
+
 /**
  *
  * internal schema
@@ -36,70 +38,95 @@ package it.jar.mulino.utils;
  */
 public class PositionConverter {
 
+    public static final byte A1 = 0;
+    public static final byte B2 = 1;
+    public static final byte C3 = 2;
+    public static final byte D1 = 3;
+    public static final byte D2 = 4;
+    public static final byte D3 = 5;
 
-    public static byte convertPosition(String position){
-        switch (position){
-            case "a7": return 0;
-            case "d6": return 1;
-            case "g6": return 2;
-            case "b6": return 3;
-            case "d5": return 4;
-            case "f5": return 5;
-            case "c5": return 6;
-            case "c6": return 7;
-            case "c7": return 8;
-            case "a4": return 9;
-            case "b4": return 10;
-            case "c4": return 11;
-            case "e4": return 12;
-            case "f4": return 13;
-            case "g4": return 14;
-            case "c3": return 15;
-            case "d3": return 16;
-            case "e3": return 17;
-            case "b2": return 18;
-            case "d2": return 19;
-            case "f2": return 20;
-            case "a1": return 21;
-            case "d1": return 22;
-            case "g1": return 23;
+    public static final byte G1 = 6;
+    public static final byte F2 = 7;
+    public static final byte E3 = 8;
+    public static final byte G4 = 9;
+    public static final byte F4 = 10;
+    public static final byte E4 = 11;
+
+    public static final byte G7 = 12;
+    public static final byte F6 = 13;
+    public static final byte E5 = 14;
+    public static final byte D7 = 15;
+    public static final byte D6 = 16;
+    public static final byte D5 = 17;
+
+    public static final byte A7 = 18;
+    public static final byte B6 = 19;
+    public static final byte C5 = 20;
+    public static final byte A4 = 21;
+    public static final byte B4 = 22;
+    public static final byte C4 = 23;
+
+
+    public static String byte2string(int bitPattern) {
+        switch (bitPattern) {
+            case A1: return "a1";
+            case A4: return "a4";
+            case A7: return "a7";
+            case B2: return "b2";
+            case B4: return "b4";
+            case B6: return "b6";
+            case C3: return "c3";
+            case C4: return "c4";
+            case C5: return "c5";
+            case D1: return "d1";
+            case D2: return "d2";
+            case D3: return "d3";
+            case D5: return "d5";
+            case D6: return "d6";
+            case D7: return "d7";
+            case E3: return "e3";
+            case E4: return "e4";
+            case E5: return "e5";
+            case F2: return "f2";
+            case F4: return "f4";
+            case F6: return "f6";
+            case G1: return "g1";
+            case G4: return "g4";
+            case G7: return "g7";
+            default:
+                throw new IllegalStateException("Posizione non appartenente alla schiera "+bitPattern);
         }
-        throw new IllegalStateException("Posizione non appartenente alla schiera "+position);
     }
 
-    /**
-     *  @param position
-     * @return
-     */
-
-    public static String convertPosition(byte position){
-        switch (position){
-            case 0: return "a7";
-            case 1: return "d6";
-            case 2: return "g6";
-            case 3: return "b6";
-            case 4: return "d5";
-            case 5: return "f5";
-            case 6: return "c5";
-            case 7: return "c6";
-            case 8: return "c7";
-            case 9: return "a4";
-            case 10: return "b4";
-            case 11: return "c4";
-            case 12: return "e4";
-            case 13: return "f4";
-            case 14: return "g4";
-            case 15: return "c3";
-            case 16: return "d3";
-            case 17: return "e3";
-            case 18: return "b2";
-            case 19: return "d2";
-            case 20: return "f2";
-            case 21: return "a1";
-            case 22: return "d1";
-            case 23: return "g1";
+    public static byte string2byte(String position) {
+        switch (position.toLowerCase()) {
+            case "a1": return A1;
+            case "a4": return A4;
+            case "a7": return A7;
+            case "b2": return B2;
+            case "b4": return B4;
+            case "b6": return B6;
+            case "c3": return C3;
+            case "c4": return C4;
+            case "c5": return C5;
+            case "d1": return D1;
+            case "d2": return D2;
+            case "d3": return D3;
+            case "d5": return D5;
+            case "d6": return D6;
+            case "d7": return D7;
+            case "e3": return E3;
+            case "e4": return E4;
+            case "e5": return E5;
+            case "f2": return F2;
+            case "f4": return F4;
+            case "f6": return F6;
+            case "g1": return G1;
+            case "g4": return G4;
+            case "g7": return G7;
+            default:
+                throw new IllegalStateException("Posizione non appartenente alla schiera "+position);
         }
-        throw new IllegalStateException("Posizione non appartenente alla schiera "+position);
     }
 
 }

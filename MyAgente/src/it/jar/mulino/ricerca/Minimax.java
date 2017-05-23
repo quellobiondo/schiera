@@ -1,6 +1,9 @@
-package fr.avianey.minimax4j;
+package it.jar.mulino.ricerca;
 
-import java.util.*;
+import it.jar.mulino.model.Mossa;
+
+import java.util.Collection;
+import java.util.List;
 
 /*
  * This file is part of minimax4j.
@@ -40,11 +43,11 @@ import java.util.*;
  *
  * @param <M> Implementation of the Move interface to use
  */
-public abstract class Minimax<M extends Move> {
+public abstract class Minimax<M extends Mossa> {
     
     private final Algorithm algo;
 
-    static final class MoveWrapper<M extends Move> {
+    static final class MoveWrapper<M extends Mossa> {
         public M move;
     }
     
@@ -201,7 +204,7 @@ public abstract class Minimax<M extends Move> {
         }
     }
     
-    protected double minimaxScore(final int depth, final int who) {
+    public double minimaxScore(final int depth, final int who) {
 		return minimax(null, depth - 1, -who);
 	}
 
@@ -284,7 +287,7 @@ public abstract class Minimax<M extends Move> {
         }
     }
 
-    protected double alphabetaScore(final int depth, final int who, final double alpha, final double beta) {
+    public double alphabetaScore(final int depth, final int who, final double alpha, final double beta) {
 		return alphabeta(null, depth - 1, -who, alpha, beta);
 	}
     
@@ -353,7 +356,7 @@ public abstract class Minimax<M extends Move> {
         }
     }
 
-    protected double negamaxScore(final int depth, final double alpha, final double beta) {
+    public double negamaxScore(final int depth, final double alpha, final double beta) {
 		return -negamax(null, depth - 1, -beta, -alpha);
 	}
     
@@ -418,7 +421,7 @@ public abstract class Minimax<M extends Move> {
         }
     }
 
-    protected double negascoutScore(final boolean first, final int depth, final double alpha, final double beta, final double b) {
+    public double negascoutScore(final boolean first, final int depth, final double alpha, final double beta, final double b) {
     	double score = -negascout(null, depth - 1, -b, -alpha);
         if (!first && alpha < score && score < beta) {
             // fails high... full re-search
@@ -472,7 +475,7 @@ public abstract class Minimax<M extends Move> {
      *         The evaluation of the position for the current player
      * @see #maxEvaluateValue()
      */
-    public abstract double evaluate();
+    public abstract int evaluate();
     
     /**
      * The absolute maximal value for the evaluate function.
@@ -481,7 +484,7 @@ public abstract class Minimax<M extends Move> {
      *         The <strong>non inclusive</strong> maximal value
      * @see #evaluate()
      */
-    public abstract double maxEvaluateValue();
+    public abstract int maxEvaluateValue();
     
     /**
      * Change current turn to the next player.

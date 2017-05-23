@@ -1,9 +1,10 @@
 package it.jar.mulino.logic;
 
 import it.jar.mulino.model.Mossa;
-import it.jar.mulino.model.MossaPosiziona;
-import it.jar.mulino.model.MossaSposta;
 import it.jar.mulino.model.Stato;
+import it.jar.mulino.ricerca.NineMensMorrisSearch;
+import it.jar.mulino.utils.NineMensMorrisSetting;
+import it.jar.mulino.utils.PositionConverter;
 
 /**
  * Created by ziro on 22/05/17.
@@ -11,21 +12,24 @@ import it.jar.mulino.model.Stato;
 public class GiocatoreUmano extends Giocatore {
 
     private Stato stato;
-
+    /*
     private static Mossa leggiMossaFaseUno(){
-        return new MossaPosiziona((byte)1);
+        return new Mossa(Sta);
     }
 
     private static Mossa leggiMossaFaseDue(){
-        return new MossaSposta((byte)0, (byte)1);
+        return new Mossa((byte)0, (byte)1);
     }
 
     private static Mossa leggiMossaFaseTre(){
         return new MossaSposta((byte)0, (byte)1);
     }
+    */
 
     @Override
     public Mossa getMove() {
+        return new Mossa(stato.currentPlayer, PositionConverter.A1, PositionConverter.A4);
+        /*
         if(stato.isFirstPhase()){
             System.out.println("posizionePedina [Posizione pedina rimossa]");
             return leggiMossaFaseUno();
@@ -38,6 +42,7 @@ public class GiocatoreUmano extends Giocatore {
                 return leggiMossaFaseDue();
             }
         }
+        */
     }
 
     @Override

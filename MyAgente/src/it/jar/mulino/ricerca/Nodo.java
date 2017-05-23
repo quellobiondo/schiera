@@ -5,21 +5,21 @@ import java.util.function.*;
 import java.util.stream.*;
 
 public abstract class Nodo implements Iterable<Nodo> {
-	protected final static Nodo FINE=new Nodo.Max(null,null);
+	public final static Nodo FINE=new Nodo.Max(null,null);
 	private final Nodo p; // padre
-	private final Stato s;
+	private final StatoRicky s;
 	private List<Nodo> f;
 	private byte v;
 	private Nodo m;
-	private boolean vp;	//valore già calcolato
-	public Nodo(Nodo p, Stato s){
+	private boolean vp;	//valore giï¿½ calcolato
+	public Nodo(Nodo p, StatoRicky s){
 		this.p=p;
 		this.s=s;
 	}
 	public Nodo getPadre(){
 		return p;
 	}
-	public Stato getStato(){
+	public StatoRicky getStato(){
 		return s;
 	}
 	public void espandi(Function<Nodo,Stream<Nodo>> e){
@@ -27,7 +27,7 @@ public abstract class Nodo implements Iterable<Nodo> {
 	}
 	public List<Nodo> getFigli(){
 		if (f==null)
-			throw new IllegalStateException("Il nodo non è ancora espanso");
+			throw new IllegalStateException("Il nodo non ï¿½ ancora espanso");
 		return f;
 	}
 	public byte getValore(){
@@ -43,7 +43,7 @@ public abstract class Nodo implements Iterable<Nodo> {
 		f=Collections.emptyList();
 		vp=true;
 	}
-	protected abstract Nodo merge();
+	public abstract Nodo merge();
 	public boolean tryMerge(){
 		if (!vp){
 			Nodo n=merge();
@@ -59,18 +59,18 @@ public abstract class Nodo implements Iterable<Nodo> {
 		return getFigli().iterator();
 	}
 	public static class Max extends Nodo {
-		public Max(Nodo p, Stato s){
+		public Max(Nodo p, StatoRicky s){
 			super(p,s);
 		}
-		protected Nodo merge(){
+		public Nodo merge(){
 			return getFigli().stream().max(Comparator.comparing(Nodo::getValore)).get();
 		}
 	}
 	public static class Min extends Nodo {
-		public Min(Nodo p, Stato s){
+		public Min(Nodo p, StatoRicky s){
 			super(p,s);
 		}
-		protected Nodo merge(){
+		public Nodo merge(){
 			return getFigli().stream().min(Comparator.comparing(Nodo::getValore)).get();
 		}
 	}
@@ -80,7 +80,7 @@ public abstract class Nodo implements Iterable<Nodo> {
 			super(p,null);
 			this.v=v;
 		}
-		protected Nodo merge(){
+		public Nodo merge(){
 			return this;
 		}
 		public byte getValore(){

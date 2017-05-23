@@ -10,7 +10,7 @@ public class Nodo implements Iterable<Nodo> {
 	public Nodo(Stato s){
 		this.s=s;
 	}
-	/*public Stato getStato(){
+	/*public StatoRicky getStato(){
 		return s;
 	}*/
 	public Nodo firstchild(){

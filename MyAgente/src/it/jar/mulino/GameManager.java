@@ -4,7 +4,8 @@ import java.io.*;
 import java.net.*;
 import it.jar.mulino.logic.*;
 import it.jar.mulino.model.*;
-import it.jar.mulino.utils.*;
+import static it.jar.mulino.utils.MossaConverter.convertMossa;
+import static it.jar.mulino.utils.StatoConverter.convertState;
 import it.unibo.ai.didattica.mulino.client.*;
 import it.unibo.ai.didattica.mulino.domain.*;
 
@@ -16,6 +17,7 @@ public class GameManager extends MulinoClient{
 
     private Giocatore giocatore;
     private Stato currentState;
+    private State.Phase fase;
 
     public GameManager(State.Checker player, Giocatore giocatore) throws UnknownHostException, IOException {
         super(player);
@@ -23,19 +25,13 @@ public class GameManager extends MulinoClient{
     }
 
     private Stato leggiStato() throws IOException, ClassNotFoundException {
-        return StatoConverter.convertExternalStatoToInternal(read());
+        State statoEsterno = read();
+        fase = statoEsterno.getCurrentPhase();
+        return convertState(statoEsterno);
     }
 
     private void scriviMossa(Mossa mossa) throws IOException, ClassNotFoundException {
-        //write(MossaConverter.convertMossaMuovi(mossa));
-    }
-
-    private void scriviMossa(MossaSposta mossa) throws IOException, ClassNotFoundException {
-        write(MossaConverter.convertMossaMuovi(mossa));
-    }
-
-    private void scriviMossa(MossaPosiziona mossa) throws IOException, ClassNotFoundException {
-        write(MossaConverter.convertMossaPosiziona(mossa));
+        write(convertMossa(fase, mossa));
     }
 
     /**Loop di gioco
