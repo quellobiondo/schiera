@@ -1,9 +1,8 @@
 package it.jar.mulino.ricerca;
 
 import it.jar.mulino.model.Mossa;
-
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import it.jar.mulino.logic.*;
 
 /*
  * This file is part of minimax4j.
@@ -431,6 +430,237 @@ public abstract class Minimax<M extends Mossa> {
 	}
     
     /**
+     * Minimax algorithm grid :
+     * <pre>
+     * function minimax(node, depth, maximizingPlayer)
+     *     if depth = 0 or node is a terminal node
+     *         return the heuristic value of node
+     *     if maximizingPlayer
+     *         bestValue := -&#8734;
+     *         for each child of node
+     *             val := minimax(child, depth - 1, FALSE)
+     *             bestValue := max(bestValue, val)
+     *         return bestValue
+     *     else
+     *         bestValue := +&#8734;
+     *         for each child of node
+     *             val := minimax(child, depth - 1, TRUE)
+     *             bestValue := min(bestValue, val)
+     *         return bestValue
+     * </pre>
+     * 
+     * Initial call for maximizing player
+     * <pre>minimax(origin, depth, TRUE)</pre>
+     * 
+     * @param wrapper
+     * @param depth
+     * @param DEPTH
+     * @return
+     */
+    /*private final double minimax(final MoveWrapper<M> wrapper, final int depth, final int who) {
+        if (depth == 0 || isOver()) {
+            return who * evaluate();
+        }
+        M bestMove = null;
+        Collection<M> moves = getPossibleMoves();
+        if (moves.isEmpty()) {
+        	next();
+            double score = minimaxScore(depth, who);
+            previous();
+            return score;
+        }
+        if (who > 0) {
+            double score = -maxEvaluateValue();
+            double bestScore = -maxEvaluateValue();
+            for (M move : moves) {
+                makeMove(move);
+                score = minimaxScore(depth, who);
+                unmakeMove(move);
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMove = move;
+                }
+            }
+            if (wrapper != null) {
+                wrapper.move = bestMove;
+            }
+            return bestScore;
+        } else {
+            double score = maxEvaluateValue();
+            double bestScore = maxEvaluateValue();
+            for (M move : moves) {
+                makeMove(move);
+                score = minimaxScore(depth, who);
+                unmakeMove(move);
+                if (score < bestScore) {
+                    bestScore = score;
+                    bestMove = move;
+                }
+            }
+            if (wrapper != null) {
+                wrapper.move = bestMove;
+            }
+            return bestScore;
+        }
+    }*/
+    /**
+     * <pre>
+     * function AlphaBetaWithMemory(n : node_type; alpha , beta , d : integer) : integer;
+	 *     if retrieve(n) == OK then // Transposition table lookup 
+	 *         if n.lowerbound >= beta then return n.lowerbound;
+	 *         if n.upperbound <= alpha then return n.upperbound;
+	 *         alpha := max(alpha, n.lowerbound);
+	 *         beta := min(beta, n.upperbound);
+	 *     if d == 0 then g := evaluate(n); // leaf node 
+	 *     else if n == MAXNODE then 
+	 *         g := -&#8734; a := alpha; // save original alpha value 
+	 *         c := firstchild(n);
+	 *         while  (g < beta) and (c != NOCHILD) do
+	 *             g := max(g, AlphaBetaWithMemory(c, a, beta, d � 1));
+	 *             a := max(a, g);
+	 *             c := nextbrother(c);
+	 *     else // n is a MINNODE 
+	 *         g := +&#8734; b := beta; // save original beta value 
+	 *         c := firstchild(n);
+	 *         while (g > alpha) and (c != NOCHILD) do
+	 *             g := min(g, AlphaBetaWithMemory(c, alpha, b, d � 1));
+	 *             b := min(b, g);
+	 *             c := nextbrother(c);
+	 *     // Traditional transposition table storing of bounds
+	 *     // Fail low result implies an upper bound 
+	 *     if g <= alpha then n.upperbound := g; store n.upperbound;
+	 *     // Found an accurate minimax value � will not occur if called with zero window 
+	 *     if g > alpha and g < beta then n.lowerbound := g; n.upperbound := g; store n.lowerbound, n.upperbound;
+	 *     // Fail high result implies a lower bound 
+	 *     if g >= beta then n.lowerbound := g; store n.lowerbound;
+	 *     return g;
+	 * </pre>
+     */
+	protected int AlphaBetaWithMemory(MoveWrapper<M> n, int d, int who, int alpha, int beta){
+		if (d==0)
+			return who*(int)evaluate(); // leaf node
+		else {
+			Collection<M> moves=getPossibleMoves();
+			M bestMove=null;
+			int score, a, b;
+			if (moves.isEmpty()){
+				next();
+				score=alphaBetaWithMemoryScore(d,who,alpha,beta);
+				previous();
+			} else if (who>0){
+				score=(int)-maxEvaluateValue();
+				a=alpha; // save original alpha value
+				for (M move : moves){
+					makeMove(move);
+					score=alphaBetaWithMemoryScore(d,who,a,beta);
+					unmakeMove(move);
+					if (score>a){
+						a=score;
+						bestMove=move;
+						if (a>=beta)
+							break;
+					}
+				}
+				if (n!=null){
+					n.move=bestMove;
+				}
+			} else { // n is a MINNODE
+				score=(int)maxEvaluateValue();
+				b=beta; // save original beta value
+				for (M move : moves){
+					makeMove(move);
+					score=alphaBetaWithMemoryScore(d,who,alpha,b);
+					unmakeMove(move);
+					if (score<b){
+						b=score;
+						bestMove=move;
+						if (alpha>=b)
+							break;
+					}
+				}
+				if (n!=null){
+					n.move=bestMove;
+				}
+			}
+			return score;
+		}
+	}
+	protected int alphaBetaWithMemoryScore(int d, int who, int alpha, int beta){
+		return AlphaBetaWithMemory(null,d-1,-who,alpha,beta);
+	}
+    /**
+     * <pre>
+     * function MTDF(root : node_type; f : integer; d: integer) : integer;
+	 *     g := f;
+	 *     upperbound := +&#8734;
+	 *     lowerbound := -&#8734;
+	 *     repeat
+	 *         if g == lowerbound then beta := g + 1 else beta := g;
+	 *         g := AlphaBetaWithMemory(root, beta � 1, beta, d);
+	 *         if g < beta then upperbound := g else lowerbound := g;
+	 *     until lowerbound >= upperbound;
+	 *     return g;
+	 * </pre>
+     * @param root
+     * @param f
+     * @param d
+     * @return
+     */
+	private int mtd(MoveWrapper<M> root, int d, int who, int f){
+		int g=f;
+		int upperbound=(int)maxEvaluateValue(),lowerbound=(int)-maxEvaluateValue();
+		do {
+			int beta=g==lowerbound ? g+1 : g;
+			g=AlphaBetaWithMemory(root,d,who,beta-1,beta);
+			if (g<beta)
+				upperbound=g;
+			else
+				lowerbound=g;
+		} while (lowerbound<upperbound);
+		return g;
+	}
+	/**
+	 * function BNS(node, alfa, beta, quality)
+	 *     do
+	 *         test := NextGuess(node, alfa, beta)
+	 *         betterCount := 0
+	 *         foreach child of node
+	 *             bestVal := -AlphaBeta(child, -test, -(test - 1))
+	 *             if bestVal >= test
+	 *                 betterCount := betterCount + 1
+	 *                 bestNode := child
+	 *                 if expectedQuality >= quality
+	 *                     return bestNode
+	 *         update alpha-beta range
+	 *     while not((beta - alfa < 2) or (betterCount = 1))
+	 *     return bestNode
+	 */
+
+    /*
+	protected M BNS(MoveWrapper<M> node, int alfa, int beta, int quality){
+		M bestNode=node.move;
+		int betterCount;
+		do{
+			int test=NextGuess(node,alfa,beta);
+			betterCount=0;
+			for (Nodo child : node.move){
+				int bestVal=-AlphaBetaWithMemory(new MoveWrapper<>(child),-test,-(test-1));
+				if (bestVal>=test){
+					betterCount++;
+					bestNode=child;
+					if (expectedQuality>=quality)
+						return bestNode;
+				}
+			}
+//			store(node.lowerbound,node.upperbound);
+		} while (!((beta-alfa<2||betterCount==1)));
+		return bestNode;
+	}
+
+	protected abstract int NextGuess(MoveWrapper<M> node, int alfa, int beta);
+    */
+
+	/**
      * Tell weather or not the game is over.
      * @return
      *         True if the game is over

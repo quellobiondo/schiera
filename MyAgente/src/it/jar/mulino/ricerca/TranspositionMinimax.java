@@ -145,6 +145,8 @@ public abstract class TranspositionMinimax<T, G extends Comparable<G>> extends M
     		// free memory :
             // evict unnecessary transpositions
     		transpositionTableMap.headMap(currentGroup).clear();
+    		if (abttm!=null)
+    			abttm.headMap(currentGroup).clear();
     	}
     }
     
@@ -234,85 +236,145 @@ public abstract class TranspositionMinimax<T, G extends Comparable<G>> extends M
     /*=================*
      * IMPLEMENTATIONS *
      *=================*/
-    
-    @Override
-    public double minimaxScore(int depth, int who) {
-    	if (!useTranspositionTable()) {
-    		return super.minimaxScore(depth, who);
-    	}
-    	double score = 0;
-    	T t = getTransposition();
-        Map<T, Double> transpositionTable = transpositionTableMap.get(getGroup());
-        if (transpositionTable != null && transpositionTable.containsKey(t)) {
-            // transposition found
-            // we can stop here as we already know the value
-            // returned by the evaluation function
-            score = who * transpositionTable.get(t);
-        } else {
-            score = super.minimaxScore(depth, who);
-            saveTransposition(transpositionTable, who * score);
+
+	@Override
+	public double minimaxScore(int depth, int who){
+		if (!useTranspositionTable())
+			return super.minimaxScore(depth,who);
+		double score=0;
+		T t=getTransposition();
+		Map<T,Double> transpositionTable=transpositionTableMap.get(getGroup());
+		if (transpositionTable!=null&&transpositionTable.containsKey(t)){
+			// transposition found
+			// we can stop here as we already know the value
+			// returned by the evaluation function
+			score=who*transpositionTable.get(t);
+		} else{
+			score=super.minimaxScore(depth,who);
+			saveTransposition(transpositionTable,who*score);
+		}
+		return score;
+	}
+	@Override
+	public double alphabetaScore(int depth, int who, double alpha, double beta){
+		if (!useTranspositionTable())
+			return super.alphabetaScore(depth,who,alpha,beta);
+		double score=0;
+		T t=getTransposition();
+		Map<T,Double> transpositionTable=transpositionTableMap.get(getGroup());
+		if (transpositionTable!=null&&transpositionTable.containsKey(t)){
+			// transposition found
+			// we can stop here as we already know the value
+			// returned by the evaluation function
+			score=who*transpositionTable.get(t);
+		} else{
+			score=super.alphabetaScore(depth,who,alpha,beta);
+			saveTransposition(transpositionTable,who*score);
+		}
+		return score;
+	}
+	@Override
+	public double negamaxScore(int depth, double alpha, double beta){
+		if (!useTranspositionTable())
+			return super.negamaxScore(depth,alpha,beta);
+		double score=0;
+		T t=getTransposition();
+		Map<T,Double> transpositionTable=transpositionTableMap.get(getGroup());
+		if (transpositionTable!=null&&transpositionTable.containsKey(t)){
+			// transposition found
+			// we can stop here as we already know the value
+			// returned by the evaluation function
+			score=transpositionTable.get(t);
+		} else{
+			score=super.negamaxScore(depth,alpha,beta);
+			saveTransposition(transpositionTable,score);
+		}
+		return score;
+	}
+	@Override
+	public double negascoutScore(boolean first, int depth, double alpha, double beta, double b){
+		if (!useTranspositionTable())
+			return super.negascoutScore(first,depth,alpha,beta,b);
+		double score=0;
+		T t=getTransposition();
+		Map<T,Double> transpositionTable=transpositionTableMap.get(getGroup());
+		if (transpositionTable!=null&&transpositionTable.containsKey(t)){
+			// transposition found
+			// we can stop here as we already know the value
+			// returned by the evaluation function
+			score=transpositionTable.get(t);
+		} else{
+			score=super.negascoutScore(first,depth,alpha,beta,b);
+			saveTransposition(transpositionTable,score);
+		}
+		return score;
+	}
+	
+	private class UpperLower {
+		int upperbound=(int)maxEvaluateValue(),lowerbound=-upperbound;
+	}
+	private TreeMap<G,Map<T,UpperLower>> abttm=new TreeMap<>();
+    private final void saveTransposition(Map<T, UpperLower> transpositionTable, UpperLower score) {
+        if (transpositionTable == null) {
+            transpositionTable = new HashMap<>();
+            abttm.put(getGroup(), transpositionTable);
         }
-        return score;
+        // save transposition
+        for (T st : getSymetricTranspositions()) {
+            transpositionTable.put(st, score);
+        }
     }
 
-    @Override
-    public double alphabetaScore(int depth, int who, double alpha, double beta) {
-    	if (!useTranspositionTable()) {
-    		return super.alphabetaScore(depth, who, alpha, beta);
-    	}
-    	double score = 0;
-        T t = getTransposition();
-        Map<T, Double> transpositionTable = transpositionTableMap.get(getGroup());
-        if (transpositionTable != null && transpositionTable.containsKey(t)) {
-            // transposition found
-            // we can stop here as we already know the value
-            // returned by the evaluation function
-            score = who * transpositionTable.get(t);
-        } else {
-            score = super.alphabetaScore(depth, who, alpha, beta);
-            saveTransposition(transpositionTable, who * score);
-        }
-        return score;
-    }
+	@Override
+	protected int AlphaBetaWithMemory(MoveWrapper<Mossa> n, int d, int who, int alpha, int beta){
+		//int score, a, b;
+		T t=getTransposition();
+		Map<T,UpperLower> abtt=abttm.get(getGroup());
+		UpperLower e;
+		if (abtt!=null && abtt.containsKey(t)){// Transposition table lookup
+			e=abtt.get(t);
+			if (e.lowerbound>=beta)
+				return e.lowerbound;
+			if (e.upperbound<=alpha)
+				return e.upperbound;
+			alpha=Math.max(alpha,e.lowerbound);
+			beta=Math.min(beta,e.upperbound);
+		} else
+			e=new UpperLower();
+ 		int score=super.AlphaBetaWithMemory(n,d,who,alpha,beta);
+		
+		// Traditional transposition table storing of bounds 
+		// Fail low result implies an upper bound 
+		if (score<=alpha)
+			e.upperbound=score;
+		// Found an accurate minimax value � will not occur if called with zero window 
+		else if (score>alpha&&score<beta){
+			e.lowerbound=score;
+			e.upperbound=score;
+		}
+		// Fail high result implies a lower bound 
+		else if (score>=beta)
+			e.lowerbound=score;
+		saveTransposition(abtt,e);
+		return score;
+	}
 
-    @Override
-    public double negamaxScore(int depth, double alpha, double beta) {
-    	if (!useTranspositionTable()) {
-    		return super.negamaxScore(depth, alpha, beta);
-    	}
-    	double score = 0;
-        T t = getTransposition();
-        Map<T, Double> transpositionTable = transpositionTableMap.get(getGroup());
-        if (transpositionTable != null && transpositionTable.containsKey(t)) {
-            // transposition found
-            // we can stop here as we already know the value
-            // returned by the evaluation function
-            score = transpositionTable.get(t);
-        } else {
-            score = super.negamaxScore(depth, alpha, beta);
-            saveTransposition(transpositionTable, score);
-        }
-        return score;
-    }
-    
-    @Override
-    public double negascoutScore(boolean first, int depth, double alpha, double beta, double b) {
-    	if (!useTranspositionTable()) {
-    		return super.negascoutScore(first, depth, alpha, beta, b);
-    	}
-    	double score = 0;
-        T t = getTransposition();
-        Map<T, Double> transpositionTable = transpositionTableMap.get(getGroup());
-        if (transpositionTable != null && transpositionTable.containsKey(t)) {
-            // transposition found
-            // we can stop here as we already know the value
-            // returned by the evaluation function
-            score = transpositionTable.get(t);
-        } else {
-            score = super.negascoutScore(first, depth, alpha, beta, b);
-            saveTransposition(transpositionTable, score);
-        }
-        return score;
-    }
-    
+	@Override
+	protected int alphaBetaWithMemoryScore(int d, int who, int alpha, int beta){
+		if (!useTranspositionTable())
+			return super.alphaBetaWithMemoryScore(d,who,alpha,beta);
+		int score=0;
+		T t=getTransposition();
+		Map<T,Double> transpositionTable=transpositionTableMap.get(getGroup());
+		if (transpositionTable!=null && transpositionTable.containsKey(t)){
+			// transposition found
+			// we can stop here as we already know the value
+			// returned by the evaluation function
+			score=who*(int)(double)transpositionTable.get(t);
+		} else{
+			score=super.alphaBetaWithMemoryScore(d,who,alpha,beta);
+			saveTransposition(transpositionTable,who*score);
+		}
+		return score;
+	}
 }

@@ -53,7 +53,6 @@ public class MulinoHumanClient extends MulinoClient {
 			player = State.Checker.WHITE;
 		else
 			player = State.Checker.BLACK;
-		String actionString = "";
 		Action action;
 		State currentState = null;
 

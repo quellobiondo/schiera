@@ -1,17 +1,11 @@
 package it.unibo.ai.didattica.mulino.gui;
 
-import it.unibo.ai.didattica.mulino.domain.State;
-
-import java.awt.Graphics;
-import java.awt.Image;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.HashMap;
-
-import javax.imageio.ImageIO;
-import javax.swing.JFrame;
+import java.awt.*;
+import java.io.*;
+import java.util.*;
+import javax.imageio.*;
+import javax.swing.*;
+import it.unibo.ai.didattica.mulino.domain.*;
 
 public class Background extends JFrame {
 	
