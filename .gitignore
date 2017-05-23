@@ -7,6 +7,9 @@ MyAgente/build
 **/*.iws
 out*
 .gradle/**
+**/*.class
+**/*.classpath
+**/*.project
 =======
 */*.idea
 */*.iml
