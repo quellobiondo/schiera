@@ -102,7 +102,7 @@ public abstract class TranspositionMinimax<T, G extends Comparable<G>> extends M
                         ((Class<?>) ((ParameterizedType) t).getRawType()).getSimpleName()))) {
             t = ((Class<?>) t).getGenericSuperclass();
         } 
-    	Class<G> cls = (Class<G>) ((ParameterizedType) t).getActualTypeArguments()[2];
+    	Class<G> cls = (Class<G>) ((ParameterizedType) t).getActualTypeArguments()[1];
         if (Comparable.class.isAssignableFrom(cls)) {
         	// the transposition Group type is Comparable
         	return new TreeMap<G, Map<T,Double>>();
@@ -222,7 +222,7 @@ public abstract class TranspositionMinimax<T, G extends Comparable<G>> extends M
      */
     public abstract G getGroup();
     
-    private final void saveTransposition(Map<T, Double> transpositionTable, double score) {
+    private final void saveTransposition(Map<T, Double> transpositionTable, double score){
         if (transpositionTable == null) {
             transpositionTable = transpositionTableFactory.newTransposition();
             transpositionTableMap.put(getGroup(), transpositionTable);

@@ -9,7 +9,8 @@ import it.jar.mulino.ricerca.NineMensMorrisSearch;
  */
 public class GiocatoreAI extends Giocatore implements Runnable{
 
-    private Mossa mossaKiller;
+    private static final long DURATA_MOSSA=20000;//58000;
+	private Mossa mossaKiller;
     private Stato statoAttuale;
     private NineMensMorrisSearch ricerca;
 
@@ -26,13 +27,17 @@ public class GiocatoreAI extends Giocatore implements Runnable{
     public static GiocatoreAI create(Stato stato, boolean isBianco){
         GiocatoreAI giocatore = new GiocatoreAI(stato, isBianco);
         Thread thread = new Thread(giocatore);
+        thread.setDaemon(true);
         //thread.setPriority(Thread.MAX_PRIORITY);
         thread.start();
         return giocatore;
     }
 
     @Override
-    public Mossa getMove() {
+    public Mossa getMove(){
+    	try{
+			Thread.sleep(DURATA_MOSSA);
+		} catch (InterruptedException e){}
         return mossaKiller;
     }
 

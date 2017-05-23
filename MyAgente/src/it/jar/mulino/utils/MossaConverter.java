@@ -1,14 +1,9 @@
 package it.jar.mulino.utils;
 
-import it.jar.mulino.model.Mossa;
-import it.unibo.ai.didattica.mulino.actions.Action;
-import it.unibo.ai.didattica.mulino.actions.Phase1Action;
-import it.unibo.ai.didattica.mulino.actions.Phase2Action;
-import it.unibo.ai.didattica.mulino.actions.PhaseFinalAction;
-import it.unibo.ai.didattica.mulino.domain.State;
-
-import static it.jar.mulino.utils.PositionConverter.byte2string;
-import static it.jar.mulino.utils.PositionConverter.string2byte;
+import static it.jar.mulino.utils.PositionConverter.*;
+import it.jar.mulino.model.*;
+import it.unibo.ai.didattica.mulino.actions.*;
+import it.unibo.ai.didattica.mulino.domain.*;
 
 /**
  * Created by ziro on 09/05/17.
@@ -16,6 +11,7 @@ import static it.jar.mulino.utils.PositionConverter.string2byte;
 public class MossaConverter {
 
     public static Action convertMossa(State.Phase fase, Mossa mossa){
+    	assert(mossa!=null);
         switch (fase){
             case FIRST:
                 Phase1Action resultFaseUno = new Phase1Action();

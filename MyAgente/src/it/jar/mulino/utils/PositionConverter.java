@@ -38,6 +38,34 @@ import it.jar.mulino.model.Stato;
  */
 public class PositionConverter {
 
+   /* public static final byte A1 = 0;
+    public static final byte B2 = 1;
+    public static final byte C3 = 2;
+    public static final byte D1 = 3;
+    public static final byte D2 = 4;
+    public static final byte D3 = 5;
+
+    public static final byte G1 = 6;
+    public static final byte F2 = 7;
+    public static final byte E3 = 8;
+    public static final byte G4 = 9;
+    public static final byte F4 = 10;
+    public static final byte E4 = 11;
+
+    public static final byte G7 = 12;
+    public static final byte F6 = 13;
+    public static final byte E5 = 14;
+    public static final byte D7 = 15;
+    public static final byte D6 = 16;
+    public static final byte D5 = 17;
+
+    public static final byte A7 = 18;
+    public static final byte B6 = 19;
+    public static final byte C5 = 20;
+    public static final byte A4 = 21;
+    public static final byte B4 = 22;
+    public static final byte C4 = 23;*/
+
     public static final byte A1 = 0;
     public static final byte B2 = 1;
     public static final byte C3 = 2;
@@ -93,6 +121,7 @@ public class PositionConverter {
             case G1: return "g1";
             case G4: return "g4";
             case G7: return "g7";
+            case Byte.MAX_VALUE: return "";
             default:
                 throw new IllegalStateException("Posizione non appartenente alla schiera "+bitPattern);
         }

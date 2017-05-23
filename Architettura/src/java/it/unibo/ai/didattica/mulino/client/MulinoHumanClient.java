@@ -16,22 +16,18 @@ public class MulinoHumanClient extends MulinoClient {
 		// TODO Auto-generated constructor stub
 	}
 	
-	private static Class<?> fase(State s){
-		switch (s.getCurrentPhase()){
-		case FIRST: return Phase1.class;
-		case SECOND: return Phase2.class;
-		case FINAL: return PhaseFinal.class;
-		}
-		return null;
-	}
-	private static Action chiediMossa(State cs, BufferedReader in) throws IOException{
+	private Action chiediMossa(State cs, BufferedReader in) throws IOException{
 		Action a=null;
 		while (true){
 			System.out.println("do your move: ");
 			String actionString = in.readLine();
 			a = stringToAction(actionString, cs.getCurrentPhase());
 			try{
-				fase(cs).getMethod("applyMove",State.class,Action.class,State.Checker.class).invoke(null,cs,a,Checker.WHITE);
+				switch (cs.getCurrentPhase()){
+				case FIRST: Phase1.applyMove(cs,a, getPlayer());break;
+				case SECOND: Phase2.applyMove(cs,a,getPlayer());break;
+				case FINAL: PhaseFinal.applyMove(cs,a,getPlayer());break;
+				}
 				break;
 			} catch (Exception e){
 				e.printStackTrace();
@@ -57,14 +53,14 @@ public class MulinoHumanClient extends MulinoClient {
 		State currentState = null;
 
 		if (player == State.Checker.WHITE) {
-			MulinoClient client = new MulinoHumanClient(State.Checker.WHITE);
+			MulinoHumanClient client = new MulinoHumanClient(State.Checker.WHITE);
 			System.out.println("You are player " + client.getPlayer().toString() + "!");
 			System.out.println("Current model:");
 			currentState = client.read();
 			System.out.println(currentState.toString());
 			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 			while (true) {
-				action=chiediMossa(currentState,in);
+				action=client.chiediMossa(currentState,in);
 				client.write(action);
 				currentState = client.read();
 				System.out.println("Effect of your move: ");
@@ -75,7 +71,7 @@ public class MulinoHumanClient extends MulinoClient {
 				System.out.println(currentState.toString());
 			}
 		} else {
-			MulinoClient client = new MulinoHumanClient(State.Checker.BLACK);
+			MulinoHumanClient client = new MulinoHumanClient(State.Checker.BLACK);
 			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 			currentState = client.read();
 			System.out.println("You are player " + client.getPlayer().toString() + "!");
@@ -86,7 +82,7 @@ public class MulinoHumanClient extends MulinoClient {
 				currentState = client.read();
 				System.out.println("Your Opponent did his move, and the result is: ");
 				System.out.println(currentState.toString());
-				action=chiediMossa(currentState,in);
+				action=client.chiediMossa(currentState,in);
 //				System.out.println("Player " + client.getPlayer().toString() + ", do your move: ");
 //				actionString = in.readLine();
 //				action = stringToAction(actionString, currentState.getCurrentPhase());

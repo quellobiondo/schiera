@@ -72,11 +72,12 @@ public class Mossa {
 
     @Override
     public int hashCode() {
-        int result = player;
+        /*int result = player;
         result = 31 * result + to;
         result = 31 * result + from;
         result = 31 * result + remove;
-        return result;
+        return result;*/
+        return player<<21 | to<<14 | from<<7 | remove;
     }
 
     @Override

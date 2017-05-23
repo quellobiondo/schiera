@@ -28,6 +28,7 @@ public class GiocatoreUmano extends Giocatore {
 
     @Override
     public Mossa getMove() {
+    	//TODO
         return new Mossa(stato.currentPlayer, PositionConverter.A1, PositionConverter.A4);
         /*
         if(stato.isFirstPhase()){
