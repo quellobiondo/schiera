@@ -47,7 +47,7 @@ public class Main {
 			
 			/**Imposto il giocatore*/
 			boolean giocatoreUmano = line.hasOption("h") || line.hasOption("Human");
-			if(giocatoreUmano)  builder.setGiocatore(new GiocatoreUmano());
+			if(giocatoreUmano)  builder.setGiocatore(new GiocatoreUmano(new Stato()));
 			else                builder.setGiocatore(GiocatoreAI.create(new Stato(), whiteFlag));
 			
 			logger.debug(builder.toString());

@@ -44,18 +44,18 @@ public class GameManager extends MulinoClient{
             System.out.println("You are player " + getPlayer().toString() + "!");
             System.out.println("Current model:");
             currentState = leggiStato();
-            giocatore.updateState(currentState);
+            giocatore.aggiornaStato(currentState);
             System.out.println(currentState);
             while (true) {
                 System.out.println("Player " + getPlayer().toString() + ", do your move: ");
-                scriviMossa(giocatore.getMove());
+                scriviMossa(giocatore.getMossa());
                 currentState = leggiStato();
-                giocatore.updateState(currentState);
+                giocatore.aggiornaStato(currentState);
                 System.out.println("Effect of your move: ");
                 System.out.println(currentState);
                 System.out.println("Waiting for your opponent move... ");
                 currentState = leggiStato();
-                giocatore.updateState(currentState);
+                giocatore.aggiornaStato(currentState);
                 System.out.println("Your Opponent did his move, and the result is: ");
                 System.out.println(currentState);
             }
