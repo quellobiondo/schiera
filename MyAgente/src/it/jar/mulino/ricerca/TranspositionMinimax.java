@@ -361,8 +361,6 @@ public abstract class TranspositionMinimax<T, G extends Comparable<G>> extends M
 
 	@Override
 	protected int alphaBetaWithMemoryScore(int d, int who, int alpha, int beta){
-		if (!useTranspositionTable())
-			return super.alphaBetaWithMemoryScore(d,who,alpha,beta);
 		int score=0;
 		T t=getTransposition();
 		Map<T,Double> transpositionTable=transpositionTableMap.get(getGroup());

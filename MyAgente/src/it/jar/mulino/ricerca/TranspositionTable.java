@@ -1,25 +1,27 @@
 package it.jar.mulino.ricerca;
 
+
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by ziro on 24/05/17.
  */
-public class TraspositionTable {
+public class TranspositionTable {
     public static final int MAX_SIZE = (int)Math.pow(2, 22);
-    /*
+
     public enum EntryType {
         LOWER_BOUND, UPPER_BOUND, EXACT_SCORE;
     }
 
-    public static final class Entry<M extends Move> {
+    public static final class Entry {
         public double score;
-        public M move;
+        public it.jar.mulino.model.Mossa move;
         public EntryType type;
         public byte depth;
     }
 
-    private Map<T, Entry<M>> table = new LRUMap<T, Entry<M>>(MAX_SIZE);
+    private Map<Long, Entry> table = new HashMap<>(MAX_SIZE);//new LRUMap<Long, Entry>(MAX_SIZE);
     private int lowerBoundHits = 0;
     private int upperBoundHits = 0;
     private int exactScoreHits = 0;
@@ -37,8 +39,8 @@ public class TraspositionTable {
         }
     }
 
-    public Entry<M> get(final T hash, final byte depth) {
-        Entry<M> entry = this.table.get(hash);
+    public Entry get(final Long hash, final byte depth) {
+        Entry entry = this.table.get(hash);
         if (entry != null && entry.depth >= depth) {
             switch (entry.type) {
                 case UPPER_BOUND:
@@ -60,8 +62,8 @@ public class TraspositionTable {
         return null;
     }
 
-    public void put(final T hash, final Entry<M> entry) {
-        Entry<M> oldEntry = this.table.get(hash);
+    public void put(final Long hash, final Entry entry) {
+        Entry oldEntry = this.table.get(hash);
         if (oldEntry == null || oldEntry.depth <= entry.depth) {
             this.table.put(hash, entry);
         }
@@ -78,5 +80,4 @@ public class TraspositionTable {
     public int size() {
         return this.table.size();
     }
-    */
 }

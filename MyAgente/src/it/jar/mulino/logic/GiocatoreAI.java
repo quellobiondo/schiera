@@ -34,7 +34,7 @@ public class GiocatoreAI extends Giocatore implements Runnable{
         this.tempoTurno = secondiTurno;
         //statoAttuale.currentPlayer = isBianco ? stato.currentPlayer : stato.opponentPlayer;
         //ricerca = new NineMensMorrisSearch(Minimax.Algorithm.NEGASCOUT, stato);
-        ricerca = new NineMensMorrisSearch(Minimax.Algorithm.BNS, stato);
+        ricerca = new NineMensMorrisSearch(Minimax.Algorithm.NEGASCOUT, stato);
     }
 
     /**crea uno pseudo-attore attivo*/
@@ -82,13 +82,14 @@ public class GiocatoreAI extends Giocatore implements Runnable{
 
     @Override
     public void run(){
-        int depth = 10;
+        int depth = 7;
         while(true){
+            depth++;
             //esplora l'albero iterativamente per ottenere la mossa migliore
+            logger.debug("Profondità "+depth+" ... ");
             lock.lock();
             mossaKiller = ricerca.getBestMove(depth); //setta la mossa migliore
-
-            logger.debug("Profondità "+depth+" mossa migliore: "+mossaKiller+" stato cambiato? "+statoCambiato);
+            logger.debug("... mossa migliore: "+mossaKiller+" stato cambiato? "+statoCambiato);
             if(statoAttuale.willWin(mossaKiller) && !statoCambiato){
                 logger.debug("Con questa mossa si vince!");
                 //se vinco con quella mossa e lo stato non è cambiato allora facciamola!
@@ -101,7 +102,7 @@ public class GiocatoreAI extends Giocatore implements Runnable{
                 checkMossaKiller(statoAttuale);
                 ricerca.statoAttualeAggiornato(statoAttuale);
                 statoCambiato = false;
-                depth = 8; //ricominciamo ad esplorare a profondità limitata
+                depth = 7; //ricominciamo ad esplorare a profondità limitata
             }
         }
     }
