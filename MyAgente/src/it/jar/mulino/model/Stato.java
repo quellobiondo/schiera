@@ -2,7 +2,6 @@ package it.jar.mulino.model;
 
 import java.io.*;
 import java.util.*;
-import it.jar.mulino.logic.*;
 import static it.jar.mulino.utils.NineMensMorrisSetting.*;
 import static it.jar.mulino.utils.PositionConverter.*;
 

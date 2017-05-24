@@ -11,8 +11,12 @@ import it.jar.mulino.utils.PositionConverter;
  */
 public class GiocatoreUmano extends Giocatore {
 
-    private Stato stato;
-    /*
+    public GiocatoreUmano(Stato statoIniziale){
+		super(statoIniziale);
+		// TODO Auto-generated constructor stub
+	}
+
+	/*
     private static Mossa leggiMossaFaseUno(){
         return new Mossa(Sta);
     }
@@ -27,7 +31,7 @@ public class GiocatoreUmano extends Giocatore {
     */
 
     @Override
-    public Mossa getMove() {
+    public Mossa getMossa() {
     	//TODO
         return new Mossa(stato.currentPlayer, PositionConverter.A1, PositionConverter.A4);
         /*
@@ -47,7 +51,7 @@ public class GiocatoreUmano extends Giocatore {
     }
 
     @Override
-    public void updateState(Stato stato){
+    public void aggiornaStato(Stato stato){
         this.stato = stato;
     }
 }
