@@ -44,6 +44,7 @@ public class NineMensMorrisSearch extends Minimax<Mossa>{ //extends Transpositio
                 stato.count[NineMensMorrisSetting.PLAYER_B],
                 lastDepth);
 	}
+
 	@Override
 	public boolean isOver(){
 		return stato.isOver();
@@ -109,9 +110,6 @@ public class NineMensMorrisSearch extends Minimax<Mossa>{ //extends Transpositio
             if(!this.faseUno && o.faseUno) {
                 return 1;
             }
-//            if(this.faseUno && o.faseUno){
-//                return depth - o.depth;
-//            }
             if(this.numeroPedineBianche != o.numeroPedineBianche && this.numeroPedineNere != o.numeroPedineNere){
 //                return depth - o.depth;
 				return 0;

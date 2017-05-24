@@ -4,6 +4,7 @@ import it.jar.mulino.model.Mossa;
 import it.jar.mulino.model.Stato;
 import it.jar.mulino.ricerca.Minimax;
 import it.jar.mulino.ricerca.NineMensMorrisSearch;
+import it.jar.mulino.utils.NineMensMorrisSetting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,9 +13,6 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-/**
- * Created by ziro on 22/05/17.
- */
 public class GiocatoreAI extends Giocatore implements Runnable{
 
     private static final Logger logger = LoggerFactory.getLogger(GiocatoreAI.class);
@@ -27,31 +25,38 @@ public class GiocatoreAI extends Giocatore implements Runnable{
     private final int tempoTurno;
     private final byte colore;	//0=bianco,1=nero
     private boolean statoCambiato;
+    private Thread thread;
 
     private GiocatoreAI(Stato stato, boolean isBianco, int secondiTurno) {
         super(stato);
-        colore=(byte)(isBianco?0:1);
+        colore=(isBianco? NineMensMorrisSetting.PLAYER_W : NineMensMorrisSetting.PLAYER_B);
         //statoAttuale = stato;
         this.tempoTurno = secondiTurno;
-        ricerca = new NineMensMorrisSearch(Minimax.Algorithm.ALPHA_BETA, stato);
+        ricerca = new NineMensMorrisSearch(Minimax.Algorithm.BNS, stato);
     }
 
     /**crea uno pseudo-attore attivo*/
     public static GiocatoreAI create(Stato stato, boolean isBianco, int durataTurno){
-        GiocatoreAI giocatore = new GiocatoreAI(stato, isBianco, durataTurno-2);
-        Thread thread = new Thread(giocatore);
-        thread.setDaemon(true);
-        thread.setName("Ai-R");
-        thread.setPriority(Thread.MAX_PRIORITY);
-        thread.start();
-        return giocatore;
+        return new GiocatoreAI(stato, isBianco, durataTurno-2);
     }
+
 	@Override
 	public Mossa getMossa(){
+        thread = new Thread(this);
+        thread.setDaemon(true);
+        thread.setName("Ai-R");
+        //thread.setPriority(Thread.MAX_PRIORITY);
+        thread.start();
+
 		logger.debug("Dammi la tua mossa entro "+tempoTurno+" s");
 		try{
 			Thread.sleep(tempoTurno*1000);
 		} catch (InterruptedException e){}
+
+		if(thread.isAlive()){
+		    thread.interrupt();
+        }
+
 		checkMossaKiller(stato);
 		logger.debug("La mia mossa killer e' "+mossaKiller);
 		return mossaKiller;
@@ -70,7 +75,9 @@ public class GiocatoreAI extends Giocatore implements Runnable{
     }
 
     private void checkMossaKiller(Stato stato){
-        if(mossaKiller==null || !stato.getPossibleMoves().contains(mossaKiller)){
+        List<Mossa> mossePossibili = stato.getPossibleMoves();
+        logger.debug("Mosse "+mossePossibili+" --> "+mossePossibili.contains(mossaKiller));
+        if(mossaKiller==null || !mossePossibili.contains(mossaKiller)){
             logger.debug("Mossa killer "+mossaKiller+" non idonea con il nuovo stato");
             List<Mossa> mosse = stato.getPossibleMoves();
             mosse.sort((mossa1, mossa2) -> {
@@ -97,6 +104,7 @@ public class GiocatoreAI extends Giocatore implements Runnable{
             logger.debug("Profondit� "+depth+" ... ");
 
             mossaKiller = ricerca.getBestMove(depth); //setta la mossa migliore
+            mossaKiller.setPlayer(colore);
             logger.debug("... mossa migliore: "+mossaKiller+" stato cambiato? "+statoCambiato);
 
             lock.lock();

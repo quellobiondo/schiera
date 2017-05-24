@@ -140,7 +140,7 @@ public abstract class Minimax<M extends Mossa> {
         }
         return wrapper.move;
     }
-    
+
     /**
      * Minimax algorithm grid :
      * <pre>
@@ -682,6 +682,7 @@ public abstract class Minimax<M extends Mossa> {
 		} while (beta-alfa>=2 && betterCount>quality);
 		return bestVal;
 	}
+
 	protected int nextGuess(int alfa, int beta, int figli){
 		return alfa+(beta-alfa)*(figli-1)/figli;
 	}
