@@ -1,20 +1,15 @@
 package it.jar.mulino.ricerca;
 
-import it.jar.mulino.logic.ValutatoreStato;
-import it.jar.mulino.model.Mossa;
-import it.jar.mulino.model.Stato;
-import it.jar.mulino.utils.NineMensMorrisSetting;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import sun.misc.GC;
-
-import java.security.acl.Group;
-import java.util.List;
+import java.util.*;
+import it.jar.mulino.logic.*;
+import it.jar.mulino.model.*;
+import it.jar.mulino.utils.*;
+import org.slf4j.*;
 
 /**
  * Created by ziro on 23/05/17.
  */
-public class NineMensMorrisSearch extends Minimax<Mossa>{ //extends TranspositionMinimax<Long, NineMensMorrisSearch.GroupEntry> {
+public class NineMensMorrisSearch extends TranspositionMinimax<Long, NineMensMorrisSearch.GroupEntry> {
 	private static final Logger logger = LoggerFactory.getLogger(NineMensMorrisSearch.class);
 
     private Stato stato;
@@ -26,6 +21,7 @@ public class NineMensMorrisSearch extends Minimax<Mossa>{ //extends Transpositio
 		this.numeroMossa = 1;
 	}
 
+	@Override
 	public Long getTransposition(){
 		return stato.getTransposition();
 	}
@@ -38,6 +34,7 @@ public class NineMensMorrisSearch extends Minimax<Mossa>{ //extends Transpositio
         return super.getBestMove(depth);
 	}
 
+        @Override
 	public GroupEntry getGroup(){
 		return new GroupEntry(!stato.phase1completed(),
                 stato.count[NineMensMorrisSetting.PLAYER_W],

@@ -9,9 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class GiocatoreAI extends Giocatore implements Runnable{
 
@@ -20,8 +17,8 @@ public class GiocatoreAI extends Giocatore implements Runnable{
     private Mossa mossaKiller;
     private NineMensMorrisSearch ricerca;
     
-    private final Lock lock = new ReentrantLock();
-    private final Condition condizioneRisposta = lock.newCondition();
+//    private final Lock lock = new ReentrantLock();
+//    private final Condition condizioneRisposta = lock.newCondition();
     private final int tempoTurno;
     private final byte colore;	//0=bianco,1=nero
     private boolean statoCambiato;
@@ -70,7 +67,7 @@ public class GiocatoreAI extends Giocatore implements Runnable{
     	}
     	logger.debug("Aggiorna lo stato");
         this.stato = stato;
-        checkMossaKiller(stato);
+        //checkMossaKiller(stato);
         statoCambiato=true;
     }
 
@@ -102,18 +99,19 @@ public class GiocatoreAI extends Giocatore implements Runnable{
             depth++;
             //esplora l'albero iterativamente per ottenere la mossa migliore
             logger.debug("Profondit� "+depth+" ... ");
+            long t=System.currentTimeMillis();
 
             mossaKiller = ricerca.getBestMove(depth); //setta la mossa migliore
             mossaKiller.setPlayer(colore);
             logger.debug("... mossa migliore: "+mossaKiller+" stato cambiato? "+statoCambiato);
 
-            lock.lock();
+            //lock.lock();
             if(!statoCambiato && stato.willWin(mossaKiller)){
                 logger.debug("Con questa mossa si vince!");
                 //se vinco con quella mossa e lo stato non � cambiato allora facciamola!
-                condizioneRisposta.signal();
+                //condizioneRisposta.signal();
             }
-            lock.unlock();
+           // lock.unlock();
             //pota l'albero se lo stato attuale della partita � cambiato
             if(statoCambiato){
                 logger.debug("Lo stato � cambiato");

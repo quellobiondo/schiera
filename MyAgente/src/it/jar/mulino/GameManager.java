@@ -45,7 +45,7 @@ public class GameManager extends MulinoClient{
 
     private void turnoAvversario() throws IOException, ClassNotFoundException {
         currentState = leggiStato();
-        currentState.next(); //Ã¨ cambiato il turno
+        currentState.next(); //è cambiato il turno
         giocatore.aggiornaStato(currentState.copia());
     }
 
