@@ -64,10 +64,8 @@ public class Mossa {
 
         Mossa that = (Mossa) o;
 
-        if (player != that.player) return false;
-        if (to != that.to) return false;
-        if (from != that.from) return false;
-        return remove == that.remove;
+        //if (player != that.player) return false;
+        return to == that.to && from == that.from && remove == that.remove;
     }
 
     @Override

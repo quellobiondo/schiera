@@ -37,7 +37,8 @@ public class GiocatoreAI extends Giocatore implements Runnable{
         Thread thread = new Thread(giocatore);
         thread.setDaemon(true);
         thread.setName("Ai-R");
-        thread.setPriority(Thread.MAX_PRIORITY);
+        //thread.setPriority(Thread.MAX_PRIORITY);
+        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         thread.start();
         return giocatore;
     }
@@ -55,7 +56,8 @@ public class GiocatoreAI extends Giocatore implements Runnable{
     @Override
     public void aggiornaStato(Stato stato){
     	if (stato.currentPlayer!=colore){
-    		logger.debug("Lo stato ha come giocatore corrente l'avversario, quindi non verrà aggiornato");
+    		logger.error("Lo stato ha come giocatore corrente l'avversario, quindi non verrà aggiornato");
+    		System.err.println("Lo stato ha come giocatore corrente l'avversario, quindi non verrà aggiornato");
     		return;
     	}
     	logger.debug("Aggiorna lo stato");
@@ -65,8 +67,13 @@ public class GiocatoreAI extends Giocatore implements Runnable{
     }
 
     private void checkMossaKiller(Stato stato){
+    	if (stato.currentPlayer!=colore){
+    		logger.error("Ho lo stato dell'altro giocatore! Mossa non controllata");
+    		System.err.println("Ho lo stato dell'altro giocatore! Mossa non controllata");
+    		return;
+    	}
         if(mossaKiller==null || !stato.getPossibleMoves().contains(mossaKiller)){
-            logger.debug("Mossa killer "+mossaKiller+" non idonea con il nuovo stato");
+            logger.error("Mossa killer "+mossaKiller+" non idonea con il nuovo stato");
             List<Mossa> mosse = stato.getPossibleMoves();
             mosse.sort((mossa1, mossa2) -> {
                 Stato s1 = stato.copia();
@@ -105,7 +112,7 @@ public class GiocatoreAI extends Giocatore implements Runnable{
             //pota l'albero se lo stato attuale della partita è cambiato
             if(statoCambiato){
                 logger.debug("Lo stato è cambiato");
-                checkMossaKiller(stato);
+                //checkMossaKiller(stato);
                 ricerca.statoAttualeAggiornato(stato);
                 statoCambiato = false;
                 depth = 7; //ricominciamo ad esplorare a profondità limitata
