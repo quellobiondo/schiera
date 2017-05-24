@@ -6,14 +6,19 @@ import it.jar.mulino.logic.*;
 import it.jar.mulino.model.*;
 import static it.jar.mulino.utils.MossaConverter.convertMossa;
 import static it.jar.mulino.utils.StatoConverter.convertState;
+
 import it.unibo.ai.didattica.mulino.client.*;
 import it.unibo.ai.didattica.mulino.domain.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Gestore del loop di gioco
  * Created by ziro on 26/04/17.
  */
 public class GameManager extends MulinoClient{
+
+    private static final Logger logger = LoggerFactory.getLogger(GameManager.class);
 
     private Giocatore giocatore;
     private Stato currentState;
@@ -22,16 +27,33 @@ public class GameManager extends MulinoClient{
     public GameManager(State.Checker player, Giocatore giocatore) throws UnknownHostException, IOException {
         super(player);
         this.giocatore = giocatore;
+        this.currentState = new Stato();
     }
 
     private Stato leggiStato() throws IOException, ClassNotFoundException {
         State statoEsterno = read();
         fase = statoEsterno.getCurrentPhase();
-        return convertState(statoEsterno);
+        Stato nuovo = convertState(statoEsterno);
+        nuovo.currentPlayer = currentState.currentPlayer;
+        nuovo.opponentPlayer = currentState.opponentPlayer;
+        return nuovo;
     }
 
     private void scriviMossa(Mossa mossa) throws IOException, ClassNotFoundException {
         write(convertMossa(fase, mossa));
+    }
+
+    private void turnoAvversario() throws IOException, ClassNotFoundException {
+        currentState = leggiStato();
+        currentState.next(); //è cambiato il turno
+        giocatore.updateState(currentState.copia());
+    }
+
+    private void turnoMio() throws IOException, ClassNotFoundException {
+        scriviMossa(giocatore.getMove());
+        currentState = leggiStato(); //leggo l'effetto della mia mossa
+        currentState.next();
+        giocatore.updateState(currentState.copia());
     }
 
     /**Loop di gioco
@@ -41,29 +63,22 @@ public class GameManager extends MulinoClient{
      */
     public void loopGioco(){
         try {
-            System.out.println("You are player " + getPlayer().toString() + "!");
-            System.out.println("Current model:");
+            logger.debug(String.format("You are player %s!", getPlayer().toString()));
             currentState = leggiStato();
             giocatore.updateState(currentState);
-            System.out.println(currentState);
+            logger.debug(String.format("Current model: %s", currentState));
             if(getPlayer()== State.Checker.BLACK){
                 //allora deve aspettare prima la mossa dell'avversario
-                currentState = leggiStato();
-                giocatore.updateState(currentState);
+                turnoAvversario();
+                logger.debug(String.format("Your Opponent did his move, and the result is:\n %s", currentState));
             }
 
             while (true) {
-                System.out.println("Player " + getPlayer().toString() + ", do your move: ");
-                scriviMossa(giocatore.getMove());
-                currentState = leggiStato();
-                giocatore.updateState(currentState);
-                System.out.println("Effect of your move: ");
-                System.out.println(currentState);
-                System.out.println("Waiting for your opponent move... ");
-                currentState = leggiStato();
-                giocatore.updateState(currentState);
-                System.out.println("Your Opponent did his move, and the result is: ");
-                System.out.println(currentState);
+                logger.debug(String.format("Player %s, do your move: ", getPlayer().toString()));
+                turnoMio();
+                logger.debug(String.format("Effect of the move\n %s\n\n Waiting for your opponent move...", currentState));
+                turnoAvversario();
+                logger.debug(String.format("Your Opponent did his move, and the result is:\n %s", currentState));
             }
         }catch (IOException ex){
             ex.printStackTrace();

@@ -3,6 +3,8 @@ package it.jar.mulino.logic;
 import it.jar.mulino.model.*;
 import it.jar.mulino.ricerca.Minimax;
 import it.jar.mulino.ricerca.NineMensMorrisSearch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -14,8 +16,9 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class GiocatoreAI extends Giocatore implements Runnable{
 
-    private static final long DURATA_MOSSA=20000;//58000;
-	private Mossa mossaKiller;
+    private static final Logger logger = LoggerFactory.getLogger(GiocatoreAI.class);
+
+    private Mossa mossaKiller;
     private Stato statoAttuale;
     private NineMensMorrisSearch ricerca;
 
@@ -28,8 +31,7 @@ public class GiocatoreAI extends Giocatore implements Runnable{
     private GiocatoreAI(Stato stato, boolean isBianco, int secondiTurno){
         statoAttuale = stato;
         this.tempoTurno = secondiTurno;
-        stato.currentPlayer = isBianco ? stato.currentPlayer : stato.opponentPlayer;
-
+        //statoAttuale.currentPlayer = isBianco ? stato.currentPlayer : stato.opponentPlayer;
         ricerca = new NineMensMorrisSearch(Minimax.Algorithm.NEGASCOUT, stato);
     }
 
@@ -50,15 +52,16 @@ public class GiocatoreAI extends Giocatore implements Runnable{
             lock.lock();
             condizioneRisposta.await(tempoTurno, TimeUnit.SECONDS);
             lock.unlock();
-            System.out.println("La mia mossa killer è "+mossaKiller);
         }catch (InterruptedException ex){
             ex.printStackTrace();
         }
+        System.out.println("La mia mossa killer e' "+mossaKiller);
         return mossaKiller;
     }
 
     @Override
     public void updateState(Stato stato){
+        logger.debug("Aggiorna lo stato");
         this.statoAttuale = stato;
         checkMossaKiller(stato);
         statoCambiato=true;
@@ -66,29 +69,33 @@ public class GiocatoreAI extends Giocatore implements Runnable{
 
     private void checkMossaKiller(Stato stato){
         if(mossaKiller==null || !stato.getPossibleMoves().contains(mossaKiller)){
+            logger.debug("Mossa killer "+mossaKiller+" non idonea con il nuovo stato");
             mossaKiller = stato.getPossibleMoves().get(0); //patch
+            logger.debug("Nuova mossa killer: "+mossaKiller);
         }
     }
 
     @Override
     public void run(){
-        int depth = 3;
+        int depth = 10;
         while(true){
             //esplora l'albero iterativamente per ottenere la mossa migliore
-            depth++;
             lock.lock();
             mossaKiller = ricerca.getBestMove(depth); //setta la mossa migliore
+            logger.debug("Profondità "+depth+" mossa migliore: "+mossaKiller+" stato cambiato? "+statoCambiato);
             if(statoAttuale.willWin(mossaKiller) && !statoCambiato){
+                logger.debug("Con questa mossa si vince!");
                 //se vinco con quella mossa e lo stato non è cambiato allora facciamola!
                 condizioneRisposta.signal();
             }
             lock.unlock();
             //pota l'albero se lo stato attuale della partita è cambiato
             if(statoCambiato){
+                logger.debug("Lo stato è cambiato");
                 checkMossaKiller(statoAttuale);
                 ricerca.statoAttualeAggiornato(statoAttuale);
                 statoCambiato = false;
-                depth = 3; //ricominciamo ad esplorare a profondità limitata
+                depth = 8; //ricominciamo ad esplorare a profondità limitata
             }
         }
     }

@@ -27,6 +27,7 @@ public class StatoConverter {
                 }
             }
         );
+
         return result;
     }
 }

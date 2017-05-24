@@ -17,6 +17,7 @@ public class Stato implements Serializable, Comparable<Stato> {
 	public byte currentPlayer;
 	public byte opponentPlayer;
 	protected List<Mossa> movesHistory=new Vector<>();
+
 	public Stato(){
 		super();
 		this.board[PLAYER_W]=0;
@@ -28,7 +29,23 @@ public class Stato implements Serializable, Comparable<Stato> {
 		this.currentPlayer=PLAYER_W;
 		this.opponentPlayer=PLAYER_B;
 	}
-	public void setPlayed(byte white, byte black){
+
+    private Stato(byte currentPlayer, byte opponentPlayer, byte[] played, byte[] count, int[]board) {
+        this.currentPlayer = currentPlayer;
+        this.opponentPlayer = opponentPlayer;
+        this.played[PLAYER_W] = played[PLAYER_W];
+        this.played[PLAYER_B] = played[PLAYER_B];
+        this.count[PLAYER_W]=count[PLAYER_W];
+        this.count[PLAYER_B]=count[PLAYER_B];
+        this.board[PLAYER_W]=board[PLAYER_W];
+        this.board[PLAYER_B]=board[PLAYER_B];
+    }
+
+    public Stato copia(){
+        return new Stato(currentPlayer, opponentPlayer, played, count, board);
+    }
+
+    public void setPlayed(byte white, byte black){
 		this.played[PLAYER_W]=white;
 		this.played[PLAYER_B]=black;
 	}
@@ -109,6 +126,12 @@ public class Stato implements Serializable, Comparable<Stato> {
 			this.setGridPosition(this.opponentPlayer,(1<<move.getRemove()));
 		}
 	}
+
+	/**
+	 * Ottiene le mosse possibili da parte del giocatore corrente
+	 * (quindi quello che ha attualmente il turno)
+	 * @return
+	 */
 	public List<Mossa> getPossibleMoves(){
 		List<Mossa> moves=new ArrayList<>(3*(BOARD_SIZE-this.count[PLAYER_W]-this.count[PLAYER_B]));
 		List<Mossa> capturesMoves=new ArrayList<>(24);
@@ -288,6 +311,10 @@ public class Stato implements Serializable, Comparable<Stato> {
 		}
 		return mappedPositions;
 	}
+
+	/**
+	 * Inversione dei giocatori (current player -> opponentPlayer)
+	 */
 	public void next(){
 		this.currentPlayer=(byte)(1-this.currentPlayer);
 		this.opponentPlayer=(byte)(1-this.opponentPlayer);
@@ -327,6 +354,7 @@ public class Stato implements Serializable, Comparable<Stato> {
 		hash|=(blackBoard<<27); // [24..47] black board
 		return hash;
 	}
+
 	private long rotateBoard90(long board){
 		long first=(board&0b111111);
 		return ((board>>>6)|(first<<18));
