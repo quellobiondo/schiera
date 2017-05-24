@@ -87,9 +87,11 @@ public class GiocatoreAI extends Giocatore implements Runnable{
             depth++;
             //esplora l'albero iterativamente per ottenere la mossa migliore
             logger.debug("Profondità "+depth+" ... ");
-            lock.lock();
+
             mossaKiller = ricerca.getBestMove(depth); //setta la mossa migliore
             logger.debug("... mossa migliore: "+mossaKiller+" stato cambiato? "+statoCambiato);
+
+            lock.lock();
             if(statoAttuale.willWin(mossaKiller) && !statoCambiato){
                 logger.debug("Con questa mossa si vince!");
                 //se vinco con quella mossa e lo stato non è cambiato allora facciamola!

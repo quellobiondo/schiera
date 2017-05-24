@@ -659,12 +659,14 @@ public abstract class Minimax<M extends Mossa> {
 			betterCount=0;
 			if (moves.isEmpty()){
 				next();
-				bestVal=alphaBetaWithMemoryScore(d,-1,alfa,beta);
+//				bestVal=alphaBetaWithMemoryScore(d,-1,alfa,beta);
+                bestVal=(int) -alphabetaScore(d, -1, alfa, beta);
 				previous();
 			}
 			for (M move : moves){
 				makeMove(move);
-				bestVal=-alphaBetaWithMemoryScore(d,1,-test,1-test);///////////
+				//bestVal=-alphaBetaWithMemoryScore(d,1,-test,1-test);///////////
+                bestVal= (int) -alphabetaScore(d,1,-test,1-test);
 				//bestVal=alphaBetaWithMemoryScore(d,who,alfa,beta);
 				unmakeMove(move);
 				if (bestVal>=test){

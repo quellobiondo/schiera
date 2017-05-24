@@ -4,6 +4,8 @@ import it.jar.mulino.logic.ValutatoreStato;
 import it.jar.mulino.model.Mossa;
 import it.jar.mulino.model.Stato;
 import it.jar.mulino.utils.NineMensMorrisSetting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.security.acl.Group;
 import java.util.List;
@@ -12,7 +14,9 @@ import java.util.List;
  * Created by ziro on 23/05/17.
  */
 public class NineMensMorrisSearch extends TranspositionMinimax<Long, NineMensMorrisSearch.GroupEntry> {
-	private Stato stato;
+	private static final Logger logger = LoggerFactory.getLogger(NineMensMorrisSearch.class);
+
+    private Stato stato;
 	private int numeroMossa;
 
 	public NineMensMorrisSearch(Algorithm algoritmo, Stato stato){
@@ -74,8 +78,8 @@ public class NineMensMorrisSearch extends TranspositionMinimax<Long, NineMensMor
 		this.stato=stato;
 		// dobbiamo ripulire la trasposition table da ciò che è inutile
         // -> mossa ulteriore
-
-	}
+        getTranspositionTableMap().forEach((k, v)->k.depth-=2);
+    }
 
 	@Override
 	public void previous(){
