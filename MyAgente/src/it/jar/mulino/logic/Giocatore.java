@@ -1,8 +1,7 @@
 package it.jar.mulino.logic;
 
-import it.jar.mulino.model.*;
-import it.unibo.ai.didattica.mulino.actions.*;
 import static it.jar.mulino.utils.NineMensMorrisSetting.*;
+import it.jar.mulino.model.*;
 
 /**
  * Un giocatore può ricevere aggiornamenti sullo stato della partita e può fare una mossa per modificare lo stato della partita

@@ -44,7 +44,7 @@ import java.util.*;
 public abstract class Minimax<M extends Mossa> {
     
     private final Algorithm algo;
-    private final TranspositionTable transpositionTable = new TranspositionTable();
+    //private final TranspositionTable transpositionTable = new TranspositionTable();
 
     static final class MoveWrapper<M extends Mossa> {
         public M move;
