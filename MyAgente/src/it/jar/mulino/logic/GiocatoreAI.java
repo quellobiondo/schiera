@@ -5,7 +5,9 @@ import it.jar.mulino.ricerca.Minimax;
 import it.jar.mulino.ricerca.NineMensMorrisSearch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.misc.GC;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -34,7 +36,7 @@ public class GiocatoreAI extends Giocatore implements Runnable{
         this.tempoTurno = secondiTurno;
         //statoAttuale.currentPlayer = isBianco ? stato.currentPlayer : stato.opponentPlayer;
         //ricerca = new NineMensMorrisSearch(Minimax.Algorithm.NEGASCOUT, stato);
-        ricerca = new NineMensMorrisSearch(Minimax.Algorithm.NEGASCOUT, stato);
+        ricerca = new NineMensMorrisSearch(Minimax.Algorithm.MINIMAX, stato);
     }
 
     /**crea uno pseudo-attore attivo*/
@@ -42,7 +44,8 @@ public class GiocatoreAI extends Giocatore implements Runnable{
         GiocatoreAI giocatore = new GiocatoreAI(stato, isBianco, durataTurno-2);
         Thread thread = new Thread(giocatore);
         thread.setDaemon(true);
-        //thread.setPriority(Thread.MAX_PRIORITY);
+        thread.setName("Ai-R");
+        thread.setPriority(Thread.MAX_PRIORITY);
         thread.start();
         return giocatore;
     }
@@ -75,14 +78,25 @@ public class GiocatoreAI extends Giocatore implements Runnable{
     private void checkMossaKiller(Stato stato){
         if(mossaKiller==null || !stato.getPossibleMoves().contains(mossaKiller)){
             logger.debug("Mossa killer "+mossaKiller+" non idonea con il nuovo stato");
-            mossaKiller = stato.getPossibleMoves().get(0); //patch
+            List<Mossa> mosse = stato.getPossibleMoves();
+            mosse.sort((mossa1, mossa2) -> {
+                Stato s1 = statoAttuale.copia();
+                s1.makeMove(mossa1);
+                int valueUno = ValutatoreStato.valutaStato(s1);
+                s1.unmakeMove(mossa1);
+                s1.makeMove(mossa2);
+                int valueDue = ValutatoreStato.valutaStato(s1);
+                return valueUno - valueDue;
+            });
+            //la migliore delle mosse possibili
+            mossaKiller = mosse.get(0);//patch
             logger.debug("Nuova mossa killer: "+mossaKiller);
         }
     }
 
     @Override
     public void run(){
-        int depth = 7;
+        int depth = 3;
         while(true){
             depth++;
             //esplora l'albero iterativamente per ottenere la mossa migliore
@@ -104,7 +118,7 @@ public class GiocatoreAI extends Giocatore implements Runnable{
                 checkMossaKiller(statoAttuale);
                 ricerca.statoAttualeAggiornato(statoAttuale);
                 statoCambiato = false;
-                depth = 7; //ricominciamo ad esplorare a profondità limitata
+                depth = 3; //ricominciamo ad esplorare a profondità limitata
             }
         }
     }

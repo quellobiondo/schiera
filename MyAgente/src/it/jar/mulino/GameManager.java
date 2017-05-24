@@ -53,7 +53,6 @@ public class GameManager extends MulinoClient{
         scriviMossa(giocatore.getMossa());
         currentState = leggiStato(); //leggo l'effetto della mia mossa
         currentState.next();
-        //giocatore.aggiornaStato(currentState.copia());
     }
 
     /**Loop di gioco

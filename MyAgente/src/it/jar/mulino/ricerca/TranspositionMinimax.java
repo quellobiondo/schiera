@@ -121,13 +121,13 @@ public abstract class TranspositionMinimax<T, G extends Comparable<G>> extends M
     
     @Override
     public Mossa getBestMove(int depth) {
-    	if (clearGroupsBeforeSearch()) {
-    		clearGroups(getGroup());
-    	}
+//    	if (clearGroupsBeforeSearch()) {
+//    		clearGroups(getGroup());
+//    	}
         Mossa m = super.getBestMove(depth);
-    	if (clearGroupsAfterSearch()) {
-    		clearGroups(getGroup());
-    	}
+//    	if (clearGroupsAfterSearch()) {
+//    		clearGroups(getGroup());
+//    	}
     	return m;
     }
     
@@ -140,7 +140,7 @@ public abstract class TranspositionMinimax<T, G extends Comparable<G>> extends M
     	return true;
     }
     
-    private final void clearGroups(G currentGroup) {
+    public final void clearGroups(G currentGroup) {
     	if (currentGroup != null) {
     		// free memory :
             // evict unnecessary transpositions
@@ -156,7 +156,7 @@ public abstract class TranspositionMinimax<T, G extends Comparable<G>> extends M
      * @return
      */
     public boolean clearGroupsBeforeSearch() {
-    	return false;
+    	return true;
     }
     
     /**
@@ -165,7 +165,7 @@ public abstract class TranspositionMinimax<T, G extends Comparable<G>> extends M
      * @return
      */
     public boolean clearGroupsAfterSearch() {
-    	return false;
+    	return true;
     }
     
     /**

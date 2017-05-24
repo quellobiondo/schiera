@@ -6,6 +6,7 @@ import it.jar.mulino.model.Stato;
 import it.jar.mulino.utils.NineMensMorrisSetting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.misc.GC;
 
 import java.security.acl.Group;
 import java.util.List;
@@ -78,7 +79,9 @@ public class NineMensMorrisSearch extends TranspositionMinimax<Long, NineMensMor
 		this.stato=stato;
 		// dobbiamo ripulire la trasposition table da ciò che è inutile
         // -> mossa ulteriore
+        clearGroups(getGroup()); //ripuliamo tutti i gruppi inutili
         getTranspositionTableMap().forEach((k, v)->k.depth-=2);
+        GC.requestLatency(200);
     }
 
 	@Override

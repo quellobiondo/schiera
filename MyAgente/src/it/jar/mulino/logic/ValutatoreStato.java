@@ -25,11 +25,11 @@ public class ValutatoreStato {
         if (!stato.phase1completed()) { // Fase 1
             return  24 * (stato.count[stato.currentPlayer] - stato.count[stato.opponentPlayer] - (stato.played[stato.currentPlayer] - stato.played[stato.opponentPlayer])) +
                     3 * (stato.numberOfPiecesBlocked(stato.opponentPlayer) - stato.numberOfPiecesBlocked(stato.currentPlayer)) +
-                    11 * (numberOfPotential3PiecesConfiguration(stato.currentPlayer) - numberOfPotential3PiecesConfiguration(stato.opponentPlayer)) +
-                    9 * (numberOfMorrises(stato.currentPlayer) - numberOfMorrises(stato.opponentPlayer)) +
-                    10 * (stato.numberOf2PiecesConfiguration(stato.currentPlayer) - stato.numberOf2PiecesConfiguration(stato.opponentPlayer)) +
-                    7 * (numberOf3PiecesConfiguration(stato.currentPlayer) - numberOf3PiecesConfiguration(stato.opponentPlayer)) +
-                    (numberOfHypotheticallyMoves(stato.currentPlayer) - numberOfHypotheticallyMoves(stato.opponentPlayer));
+                    18 * (numberOfPotential3PiecesConfiguration(stato.currentPlayer) - numberOfPotential3PiecesConfiguration(stato.opponentPlayer)) +
+                    - 10 * numberOfMorrises(stato.opponentPlayer) +
+                    10 * (stato.numberOf2PiecesConfiguration(stato.currentPlayer) - stato.numberOf2PiecesConfiguration(stato.opponentPlayer));
+                    //7 * (numberOf3PiecesConfiguration(stato.currentPlayer) - numberOf3PiecesConfiguration(stato.opponentPlayer)) +
+                    //20 *(numberOfHypotheticallyMoves(stato.currentPlayer) - numberOfHypotheticallyMoves(stato.opponentPlayer));
         }  else if (stato.count[PLAYER_B] > 3 && stato.count[PLAYER_W] > 3) { // Fase 2
             return  43 * (stato.count[stato.currentPlayer] - stato.count[stato.opponentPlayer]) +
                     10 * (stato.numberOfPiecesBlocked(stato.opponentPlayer) - stato.numberOfPiecesBlocked(stato.currentPlayer)) +
