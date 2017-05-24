@@ -48,6 +48,20 @@ public class Stato implements Serializable, Comparable<Stato> {
 	public boolean isOver(){
 		return this.hasWon(PLAYER_W)||this.hasWon(PLAYER_B)||this.isADraw();
 	}
+
+	public boolean willWin(Mossa mossa){
+		int board=this.board[currentPlayer]|(1<<mossa.getTo());
+		if (mossa.getFrom()!=Byte.MAX_VALUE){
+			board&=~(1<<mossa.getFrom());
+		}
+		//ho vinto se:
+		//- è stata completata la fase uno e:
+		//    - ho fatto un mulino e il mio avversario ha tre pezzi
+		//    - ho bloccato tutte le pedine del mio avversario
+		return this.phase1completed()&&((this.isMill(board, mossa.getTo()) && count[opponentPlayer] == 3) ||
+				this.numberOfPiecesBlocked(opponentPlayer) == count[opponentPlayer]);
+	}
+
 	public boolean hasWon(byte player){
 		return this.phase1completed()&&(this.count[1-player]<3|| // L'avversario ha meno di 3 pezzi
 				(this.currentPlayer==1-player&&this.numberOfPiecesBlocked((byte)(1-player))==this.count[1-player])); // L'avversario non puo' muoversi

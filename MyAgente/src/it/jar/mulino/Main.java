@@ -30,6 +30,7 @@ public class Main {
 		OptionGroup giocatore=new OptionGroup();
 		giocatore.addOption(new Option("ai","The player is an AI [Default]"));
 		giocatore.addOption(new Option("h","Human",false,"The player is human"));
+		options.addOption("t", "time", true, "Durata turno");
 		options.addOptionGroup(colore);
 		options.addOptionGroup(giocatore);
         try {
@@ -44,11 +45,20 @@ public class Main {
 			if(whiteFlag && blackFlag)   abort("Usage error: il giocatore non può essere bianco e nero");
 			if(whiteFlag)                builder.setChecker(State.Checker.WHITE);
 			if(blackFlag)                builder.setChecker(State.Checker.BLACK);
-			
+
+			int durataTurno = 60; //60secondi
+			if(line.hasOption("t")){
+				try {
+					durataTurno = Integer.parseInt(line.getOptionValue("t"));
+				}catch (NumberFormatException ex){
+					logger.error("Formato tempo errato", ex);
+				}
+			}
+
 			/**Imposto il giocatore*/
 			boolean giocatoreUmano = line.hasOption("h") || line.hasOption("Human");
 			if(giocatoreUmano)  builder.setGiocatore(new GiocatoreUmano());
-			else                builder.setGiocatore(GiocatoreAI.create(new Stato(), whiteFlag));
+			else                builder.setGiocatore(GiocatoreAI.create(new Stato(), whiteFlag, durataTurno));
 			
 			logger.debug(builder.toString());
 		} catch (ParseException exp){

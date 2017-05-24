@@ -29,15 +29,15 @@ public class Mossa {
         this(player, Byte.MAX_VALUE, to, Byte.MAX_VALUE);
     }
 
-    public int getTo() {
+    public byte getTo() {
         return to;
     }
 
-    public int getRemove() {
+    public byte getRemove() {
         return remove;
     }
 
-    public int getFrom() {
+    public byte getFrom() {
         return from;
     }
 
