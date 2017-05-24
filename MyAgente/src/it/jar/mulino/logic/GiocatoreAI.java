@@ -35,6 +35,7 @@ public class GiocatoreAI extends Giocatore implements Runnable{
 
     /**crea uno pseudo-attore attivo*/
     public static GiocatoreAI create(Stato stato, boolean isBianco, int durataTurno){
+        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         return new GiocatoreAI(stato, isBianco, durataTurno-2);
     }
 
@@ -44,7 +45,6 @@ public class GiocatoreAI extends Giocatore implements Runnable{
         thread.setDaemon(true);
         thread.setName("Ai-R");
         //thread.setPriority(Thread.MAX_PRIORITY);
-        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         thread.start();
 
 		logger.debug("Dammi la tua mossa entro "+tempoTurno+" s");
@@ -84,8 +84,7 @@ public class GiocatoreAI extends Giocatore implements Runnable{
         logger.debug("Mosse "+mossePossibili+" --> "+mossePossibili.contains(mossaKiller));
         if(mossaKiller==null || !stato.getPossibleMoves().contains(mossaKiller)){
             logger.error("Mossa killer "+mossaKiller+" non idonea con il nuovo stato");
-            List<Mossa> mosse = stato.getPossibleMoves();
-            mosse.sort((mossa1, mossa2) -> {
+            mossePossibili.sort((mossa1, mossa2) -> {
                 Stato s1 = stato.copia();
                 s1.makeMove(mossa1);
                 int valueUno = ValutatoreStato.valutaStato(s1);
@@ -95,7 +94,7 @@ public class GiocatoreAI extends Giocatore implements Runnable{
                 return valueUno - valueDue;
             });
             //la migliore delle mosse possibili
-            mossaKiller = mosse.get(0);//patch
+            mossaKiller = mossePossibili.get(0);//patch
             logger.debug("Nuova mossa killer: "+mossaKiller);
         }
     }

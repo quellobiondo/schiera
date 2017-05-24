@@ -9,7 +9,7 @@ import org.slf4j.*;
 /**
  * Created by ziro on 23/05/17.
  */
-public class NineMensMorrisSearch extends TranspositionMinimax<Long, NineMensMorrisSearch.GroupEntry> {
+public class NineMensMorrisSearch extends Minimax<Mossa> {
 	private static final Logger logger = LoggerFactory.getLogger(NineMensMorrisSearch.class);
 
     private Stato stato;
@@ -21,20 +21,17 @@ public class NineMensMorrisSearch extends TranspositionMinimax<Long, NineMensMor
 		this.numeroMossa = 1;
 	}
 
-	@Override
 	public Long getTransposition(){
 		return stato.getTransposition();
 	}
 
 	private int lastDepth = 1;
 
-    @Override
     public Mossa getBestMove(int depth) {
         lastDepth = depth;
         return super.getBestMove(depth);
 	}
 
-        @Override
 	public GroupEntry getGroup(){
 		return new GroupEntry(!stato.phase1completed(),
                 stato.count[NineMensMorrisSetting.PLAYER_W],
@@ -42,31 +39,24 @@ public class NineMensMorrisSearch extends TranspositionMinimax<Long, NineMensMor
                 lastDepth);
 	}
 
-	@Override
 	public boolean isOver(){
 		return stato.isOver();
 	}
-	@Override
 	public void makeMove(Mossa move){
 		stato.makeMove(move);
 	}
-	@Override
 	public void unmakeMove(Mossa move){
 		stato.unmakeMove(move);
 	}
-	@Override
 	public List<Mossa> getPossibleMoves(){
 		return stato.getPossibleMoves();
 	}
-	@Override
 	public int evaluate(){
 		return ValutatoreStato.valutaStato(stato);
 	}
-	@Override
 	public int maxEvaluateValue(){
 		return Integer.MAX_VALUE;
 	}
-	@Override
 	public void next(){
 		stato.next();
 	}
@@ -80,7 +70,6 @@ public class NineMensMorrisSearch extends TranspositionMinimax<Long, NineMensMor
 //        GC.requestLatency(200);
     }
 
-	@Override
 	public void previous(){
 		stato.previous();
 	}

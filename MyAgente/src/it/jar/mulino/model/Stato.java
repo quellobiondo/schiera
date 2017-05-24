@@ -111,6 +111,10 @@ public class Stato implements Serializable, Comparable<Stato> {
 		this.next();
 	}
 	public void unmakeMove(Mossa move){
+		if (movesHistory.isEmpty()){
+			System.err.println("Impossibile rimuovere la mossa: nessusa mossa fatta!");
+			return;
+		}
 		this.movesHistory.remove(0);
 		this.previous();
 		this.setGridPosition(FREE,(1<<move.getTo()));
@@ -132,7 +136,7 @@ public class Stato implements Serializable, Comparable<Stato> {
 	 * @return
 	 */
 	public List<Mossa> getPossibleMoves(){
-		List<Mossa> moves=new ArrayList<>(3*(BOARD_SIZE-this.count[PLAYER_W]-this.count[PLAYER_B]));
+		List<Mossa> moves=new ArrayList<>(24);//3*(BOARD_SIZE-this.count[PLAYER_W]-this.count[PLAYER_B]));
 		List<Mossa> capturesMoves=new ArrayList<>(24);
 		if (this.played[this.currentPlayer]<PIECES){ // Fase 1
 			for (byte to=0;to<BOARD_SIZE;to++){
