@@ -14,7 +14,6 @@ public class GiocatoreAI extends Giocatore implements Runnable{
     private static final Logger logger = LoggerFactory.getLogger(GiocatoreAI.class);
 
     private Mossa mossaKiller;
-    //private Stato stato;
     private NineMensMorrisSearch ricerca;
     
 //    private final Lock lock = new ReentrantLock();
@@ -28,9 +27,7 @@ public class GiocatoreAI extends Giocatore implements Runnable{
         colore=(byte)(isBianco?0:1);
         //statoAttuale = stato;
         this.tempoTurno = secondiTurno;
-        //statoAttuale.currentPlayer = isBianco ? stato.currentPlayer : stato.opponentPlayer;
-        //ricerca = new NineMensMorrisSearch(Minimax.Algorithm.NEGASCOUT, stato);
-        ricerca = new NineMensMorrisSearch(Minimax.Algorithm.MINIMAX, stato);
+        ricerca = new NineMensMorrisSearch(Minimax.Algorithm.ALPHA_BETA, stato);
     }
 
     /**crea uno pseudo-attore attivo*/
@@ -38,26 +35,14 @@ public class GiocatoreAI extends Giocatore implements Runnable{
         GiocatoreAI giocatore = new GiocatoreAI(stato, isBianco, durataTurno-2);
         Thread thread = new Thread(giocatore);
         thread.setDaemon(true);
-        //thread.setPriority(Thread.MAX_PRIORITY);
+        thread.setName("Ai-R");
+        thread.setPriority(Thread.MAX_PRIORITY);
         thread.start();
         return giocatore;
     }
 	@Override
 	public Mossa getMossa(){
-		/*logger.debug("Dammi la tua mossa entro "+tempoTurno+" s");
-		long t=System.currentTimeMillis();
-		try {
-			if (lock.tryLock(tempoTurno,TimeUnit.SECONDS)){
-				condizioneRisposta.await(tempoTurno*1000-(System.currentTimeMillis()-t),TimeUnit.MILLISECONDS);
-				if (!validaMossa(mossaKiller)){
-					logger.error("mossa non valida");
-				}
-				lock.unlock();
-			} else
-				logger.error("timeout dopo "+(System.currentTimeMillis()-t/1000.0)+" s");
-        }catch (InterruptedException ex){
-            ex.printStackTrace();
-        }*/
+		logger.debug("Dammi la tua mossa entro "+tempoTurno+" s");
 		try{
 			Thread.sleep(tempoTurno*1000);
 		} catch (InterruptedException e){}
@@ -81,14 +66,25 @@ public class GiocatoreAI extends Giocatore implements Runnable{
     private void checkMossaKiller(Stato stato){
         if(mossaKiller==null || !stato.getPossibleMoves().contains(mossaKiller)){
             logger.debug("Mossa killer "+mossaKiller+" non idonea con il nuovo stato");
-            mossaKiller = stato.getPossibleMoves().get(0); //patch
+            List<Mossa> mosse = stato.getPossibleMoves();
+            mosse.sort((mossa1, mossa2) -> {
+                Stato s1 = stato.copia();
+                s1.makeMove(mossa1);
+                int valueUno = ValutatoreStato.valutaStato(s1);
+                s1.unmakeMove(mossa1);
+                s1.makeMove(mossa2);
+                int valueDue = ValutatoreStato.valutaStato(s1);
+                return valueUno - valueDue;
+            });
+            //la migliore delle mosse possibili
+            mossaKiller = mosse.get(0);//patch
             logger.debug("Nuova mossa killer: "+mossaKiller);
         }
     }
 
     @Override
     public void run(){
-        int depth = 6;
+        int depth = 7;
         while(true){
             depth++;
             //esplora l'albero iterativamente per ottenere la mossa migliore

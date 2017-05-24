@@ -55,7 +55,7 @@ public abstract class Minimax<M extends Mossa> {
      * 
      * @author antoine vianey
      */
-    public static enum Algorithm {
+    public enum Algorithm {
         /** 
          * The Minimax algorithm (slowest) 
          * @see http://en.wikipedia.org/wiki/Minimax

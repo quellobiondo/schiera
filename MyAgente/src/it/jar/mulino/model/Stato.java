@@ -212,28 +212,7 @@ public class Stato implements Serializable, Comparable<Stato> {
 		}
 		return tot2piecesConfiguration;
 	}
-/*	public List<Mossa> getPossibleQuiescenceMoves(){
-		if (this.phase1completed()&&!this.phase2completed()){
-			byte currentPlayer=this.currentPlayer;
-			byte opponentPlayer=this.opponentPlayer;
-			int reachablePositions=this.numberOfReachablePositions(currentPlayer);
-			int opponentReachablePositions=this.numberOfReachablePositions(opponentPlayer);
-			List<Mossa> moves=this.getPossibleMoves();
-			if (reachablePositions>opponentReachablePositions){
-				List<Mossa> filteredMoves=new ArrayList<>();
-				for (Mossa move : moves){
-					this.makeMove(move);
-					if (move.isRemoveMove()||this.numberOfReachablePositions(opponentPlayer)<opponentReachablePositions){
-						filteredMoves.add(move);
-					}
-					this.unmakeMove(move);
-				}
-				return filteredMoves;
-			}
-			return moves;
-		}
-		return getPossibleMoves();
-	}*/
+
 	public int numberOfPiecesBlocked(byte player){
 		if (this.phase1completed()&&this.count[player]==3){
 			return 0;
@@ -254,28 +233,6 @@ public class Stato implements Serializable, Comparable<Stato> {
 		}
 		return (board&moves)==moves;
 	}
-	/*public boolean isQuiet(){
-		if (!this.phase1completed()){ // Fase 1
-			boolean lastMoveBlockedMill=false;
-			int opponentBoard=this.board[this.currentPlayer];
-			for (int mill : MILLS[this.movesHistory.get(0).getTo()]){
-				if (Integer.bitCount((opponentBoard&mill))==2){
-					lastMoveBlockedMill=true;
-					break;
-				}
-			}
-			return !lastMoveBlockedMill||this.numberOf2PiecesConfiguration(this.currentPlayer)==0;
-		} else if (!this.phase2completed()){ // Fase 2
-			int reachablePositions=this.numberOfReachablePositions(this.currentPlayer);
-			int opponentReachablePositions=this.numberOfReachablePositions(this.opponentPlayer);
-			int emptyPositions=(BOARD_SIZE-this.count[PLAYER_W]-this.count[PLAYER_B])/2;
-			int blockedPieces=this.numberOfPiecesBlocked(this.currentPlayer);
-			int opponentBlockedPieces=this.numberOfPiecesBlocked(this.opponentPlayer);
-			return Math.min(this.count[this.currentPlayer]-blockedPieces,this.count[this.opponentPlayer]-opponentBlockedPieces)!=1||(Math.min(reachablePositions,opponentReachablePositions)>=emptyPositions&&Math.max(reachablePositions,opponentReachablePositions)>=emptyPositions);
-		} else{ // Fase 3
-			return true;
-		}
-	}*/
 
 	public int numberOfReachablePositions(byte player){
 		if (this.phase1completed()&&this.count[player]==3){
@@ -392,20 +349,6 @@ public class Stato implements Serializable, Comparable<Stato> {
 		sb.append("Phase 1 completed: ").append(this.phase1completed()).append(";\n");
 		sb.append("Phase 2 completed: ").append(this.phase2completed()).append(";\n");
 		sb.append("\n");
-		/*
-		 * sb.append("Number of morrises player (W): " + this.numberOfMorrises(PLAYER_W) + "\n"); sb.append("Number of morrises player (B): " + this.numberOfMorrises(PLAYER_B) + "\n");
-		 * sb.append("Number of double morrises player (W): " + this.numberOfDoubleMorrises(PLAYER_W) + "\n"); sb.append("Number of double morrises player (B): " +
-		 * this.numberOfDoubleMorrises(PLAYER_B) + "\n"); sb.append("Number of pieces blocked player (W): " + this.numberOfPiecesBlocked(PLAYER_W) + "\n");
-		 * sb.append("Number of pieces blocked player (B): " + this.numberOfPiecesBlocked(PLAYER_B )+ "\n"); sb.append("Number of 2 pieces configurations player (W): " +
-		 * this.numberOf2PiecesConfiguration(PLAYER_W) + "\n"); sb.append("Number of 2 pieces configurations player (B): " + this.numberOf2PiecesConfiguration(PLAYER_B) + "\n");
-		 * sb.append("Number of 3 pieces configurations player (W): " + this.numberOf3PiecesConfiguration(PLAYER_W) + "\n"); sb.append("Number of 3 pieces configurations player (B): " +
-		 * this.numberOf3PiecesConfiguration(PLAYER_B) + "\n"); sb.append("Number of potential 3 pieces configurations player (W): " + this.numberOfPotential3PiecesConfiguration(PLAYER_W) + "\n");
-		 * sb.append("Number of potential 3 pieces configurations player (B): " + this.numberOfPotential3PiecesConfiguration(PLAYER_B) + "\n"); sb.append("Number of reachable positions player (W): " +
-		 * this.numberOfReachablePositions(PLAYER_W) + "\n"); sb.append("Number of reachable positions player (B): " + this.numberOfReachablePositions(PLAYER_B) + "\n");
-		 * sb.append("Number of unblockable morrises player (W): " + this.numberOfUnblockableMorrises(PLAYER_W) + "\n"); sb.append("Number of unblockable morrises player (B): " +
-		 * this.numberOfUnblockableMorrises(PLAYER_B) + "\n"); sb.append("Number of hypothetically moves player (W): " + this.numberOfHypotheticallyMoves(PLAYER_W) + "\n");
-		 * sb.append("Number of hypothetically moves player (B): " + this.numberOfHypotheticallyMoves(PLAYER_B) + "\n"); sb.append("\n");
-		 */
 		sb.append("Moves history: ");
 		for (Mossa move : movesHistory.toArray(new Mossa[0])){
 			sb.append(move.toStringMove()+", ");

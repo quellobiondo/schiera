@@ -7,26 +7,6 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 
-/*
- * This file is part of minimax4j.
- * <https://github.com/avianey/minimax4j>
- *  
- * Copyright (C) 2012, 2013, 2014 Antoine Vianey
- * 
- * minimax4j is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
- *
- * minimax4j is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with minimax4j. If not, see <http://www.gnu.org/licenses/lgpl.html>
- */
-
 /**
  * An {@link Minimax} backed by a <a href="http://en.wikipedia.org/wiki/Transposition_table">transposition table</a>
  * to speed up the search of the game tree.<br/>
@@ -39,7 +19,7 @@ import java.util.*;
  * @param <G> the transposition group grid or {@link Void} if grouping is not necessary.
  * @see Transposition
  */
-public abstract class TranspositionMinimax<T, G extends Comparable<G>> extends Minimax<Mossa> {
+public abstract class TranspositionMinimax<T, G extends NineMensMorrisSearch.GroupEntry> extends Minimax<Mossa> {
 
 	/**
 	 * Factory for transposition table.
@@ -67,7 +47,7 @@ public abstract class TranspositionMinimax<T, G extends Comparable<G>> extends M
     }
 
     public TranspositionMinimax(Algorithm algo) {
-        this(algo, ()->new HashMap<T, Double>());
+        this(algo, ()->new HashMap<>(30000));
     }
 
     public TranspositionMinimax(Algorithm algo, TranspositionTableFactory<T> transpositionTableFactory) {
@@ -140,7 +120,7 @@ public abstract class TranspositionMinimax<T, G extends Comparable<G>> extends M
     	return true;
     }
     
-    private final void clearGroups(G currentGroup) {
+    public final void clearGroups(G currentGroup) {
     	if (currentGroup != null) {
     		// free memory :
             // evict unnecessary transpositions
@@ -156,7 +136,7 @@ public abstract class TranspositionMinimax<T, G extends Comparable<G>> extends M
      * @return
      */
     public boolean clearGroupsBeforeSearch() {
-    	return false;
+    	return true;
     }
     
     /**
@@ -165,7 +145,7 @@ public abstract class TranspositionMinimax<T, G extends Comparable<G>> extends M
      * @return
      */
     public boolean clearGroupsAfterSearch() {
-    	return false;
+    	return true;
     }
     
     /**
@@ -266,6 +246,7 @@ public abstract class TranspositionMinimax<T, G extends Comparable<G>> extends M
 			// transposition found
 			// we can stop here as we already know the value
 			// returned by the evaluation function
+			if(getGroup().depth>=depth)
 			score=who*transpositionTable.get(t);
 		} else{
 			score=super.alphabetaScore(depth,who,alpha,beta);
@@ -284,6 +265,7 @@ public abstract class TranspositionMinimax<T, G extends Comparable<G>> extends M
 			// transposition found
 			// we can stop here as we already know the value
 			// returned by the evaluation function
+			if(getGroup().depth>=depth)
 			score=transpositionTable.get(t);
 		} else{
 			score=super.negamaxScore(depth,alpha,beta);
@@ -302,6 +284,7 @@ public abstract class TranspositionMinimax<T, G extends Comparable<G>> extends M
 			// transposition found
 			// we can stop here as we already know the value
 			// returned by the evaluation function
+			if(getGroup().depth>=depth)
 			score=transpositionTable.get(t);
 		} else{
 			score=super.negascoutScore(first,depth,alpha,beta,b);
@@ -369,7 +352,7 @@ public abstract class TranspositionMinimax<T, G extends Comparable<G>> extends M
 			// we can stop here as we already know the value
 			// returned by the evaluation function
 			score=who*(int)(double)transpositionTable.get(t);
-		} else{
+		} else {
 			score=super.alphaBetaWithMemoryScore(d,who,alpha,beta);
 			saveTransposition(transpositionTable,who*score);
 		}

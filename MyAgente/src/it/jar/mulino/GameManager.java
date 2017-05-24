@@ -57,7 +57,6 @@ public class GameManager extends MulinoClient{
         logger.debug((System.currentTimeMillis()-t)/1000.0+" s di turno");
         currentState = leggiStato(); //leggo l'effetto della mia mossa
         currentState.next();
-        //giocatore.aggiornaStato(currentState.copia());
     }
 
     /**Loop di gioco
