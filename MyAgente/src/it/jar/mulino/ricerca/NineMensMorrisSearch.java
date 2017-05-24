@@ -1,15 +1,10 @@
 package it.jar.mulino.ricerca;
 
-import it.jar.mulino.logic.ValutatoreStato;
-import it.jar.mulino.model.Mossa;
-import it.jar.mulino.model.Stato;
-import it.jar.mulino.utils.NineMensMorrisSetting;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import sun.misc.GC;
-
-import java.security.acl.Group;
-import java.util.List;
+import java.util.*;
+import it.jar.mulino.logic.*;
+import it.jar.mulino.model.*;
+import it.jar.mulino.utils.*;
+import org.slf4j.*;
 
 /**
  * Created by ziro on 23/05/17.
