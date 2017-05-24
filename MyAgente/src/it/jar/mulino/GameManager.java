@@ -46,6 +46,12 @@ public class GameManager extends MulinoClient{
             currentState = leggiStato();
             giocatore.aggiornaStato(currentState);
             System.out.println(currentState);
+            if(getPlayer()== State.Checker.BLACK){
+                //allora deve aspettare prima la mossa dell'avversario
+                currentState = leggiStato();
+                giocatore.aggiornaStato(currentState);
+            }
+
             while (true) {
                 System.out.println("Player " + getPlayer().toString() + ", do your move: ");
                 scriviMossa(giocatore.getMossa());

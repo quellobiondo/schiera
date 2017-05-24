@@ -20,7 +20,7 @@ public class NineMensMorrisSearch extends TranspositionMinimax<Long,Stato> {
 	}
 	@Override
 	public Stato getGroup(){
-		return stato;	//non si pu� restituire null!!
+		return stato;
 	}
 	@Override
 	public boolean isOver(){
@@ -53,7 +53,7 @@ public class NineMensMorrisSearch extends TranspositionMinimax<Long,Stato> {
 	public void statoAttualeAggiornato(Stato stato){
 		this.stato=stato;
 		// dobbiamo ripulire la trasposition table da ciò che è inutile
-		super.clearTranspositionTable();
+		//super.clearTranspositionTable();
 	}
 	@Override
 	public void previous(){

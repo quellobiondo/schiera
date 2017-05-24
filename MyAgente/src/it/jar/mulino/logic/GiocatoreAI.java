@@ -1,6 +1,5 @@
 package it.jar.mulino.logic;
 
-import java.util.concurrent.*;
 import it.jar.mulino.model.*;
 import it.jar.mulino.ricerca.Minimax;
 import it.jar.mulino.ricerca.NineMensMorrisSearch;
@@ -33,18 +32,17 @@ public class GiocatoreAI extends Giocatore implements Runnable{
         thread.start();
         return giocatore;
     }
-    Semaphore s=new Semaphore(0);
     @Override
     public Mossa getMossa(){
+    	System.out.println("Dammi la tua mossa");
     	try{
 			Thread.sleep(DURATA_MOSSA);
-			synchronized (this){
-				wait();//58000-DURATA_MOSSA);
-			}//s.tryAcquire(58000-DURATA_MOSSA,TimeUnit.MILLISECONDS);
+			
 			if (!validaMossa(mossaKiller)){
 				System.err.println("mossa non valida");
 			}
 		} catch (InterruptedException e){}
+		System.out.println("La mia mossa killer Ë "+mossaKiller);
         return mossaKiller;
     }
 
@@ -54,6 +52,12 @@ public class GiocatoreAI extends Giocatore implements Runnable{
         statoCambiato=true;
     }
 
+    private void checkMossaKiller(Stato stato){
+        if(mossaKiller==null || !stato.getPossibleMoves().contains(mossaKiller)){
+            mossaKiller = stato.getPossibleMoves().get(0); //patch
+        }
+    }
+
     @Override
     public void run(){
         int depth = 3;
@@ -61,16 +65,13 @@ public class GiocatoreAI extends Giocatore implements Runnable{
             //esplora l'albero iterativamente per ottenere la mossa migliore
             depth++;
             mossaKiller = ricerca.getBestMove(depth); //setta la mossa migliore
-            /*if (s.availablePermits()==0)
-            	s.release();*/
-            synchronized (this){
-				notify();
-			}
+
             //pota l'albero se lo stato attuale della partita Ë cambiato
             if(statoCambiato){
+                checkMossaKiller(stato);
                 ricerca.statoAttualeAggiornato(stato);
                 statoCambiato = false;
-                depth = 3; //ricominciamo ad esplorare a profondit√† limitata
+                depth = 3; //ricominciamo ad esplorare a profondit‡ limitata
             }
         }
     }

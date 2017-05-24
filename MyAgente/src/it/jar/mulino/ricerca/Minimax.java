@@ -2,7 +2,6 @@ package it.jar.mulino.ricerca;
 
 import it.jar.mulino.model.Mossa;
 import java.util.*;
-import it.jar.mulino.logic.*;
 
 /*
  * This file is part of minimax4j.
@@ -77,7 +76,17 @@ public abstract class Minimax<M extends Mossa> {
          * @see Minimax#getPossibleMoves()
          * @see http://en.wikipedia.org/wiki/Negascout
          **/
-        NEGASCOUT;
+        NEGASCOUT,
+        /**
+         * MTD-f
+         * @see https://en.wikipedia.org/wiki/MTD-f
+         */
+        MTD,
+        /**
+         * Best Node Search
+         * @see https://en.wikipedia.org/wiki/Best_Node_Search
+         */
+        BNS
     }
     
     /**
@@ -121,9 +130,10 @@ public abstract class Minimax<M extends Mossa> {
             negamax(wrapper, depth, -maxEvaluateValue(), maxEvaluateValue());
             break;
         case NEGASCOUT:
-        default:
             negascout(wrapper, depth, -maxEvaluateValue(), maxEvaluateValue());
             break;
+        case MTD:
+            MTD(wrapper, depth, 1, maxEvaluateValue());
         }
         return wrapper.move;
     }
@@ -565,7 +575,7 @@ public abstract class Minimax<M extends Mossa> {
 					n.move=bestMove;
 				}
 			} else { // n is a MINNODE
-				score=(int)maxEvaluateValue();
+				score=maxEvaluateValue();
 				b=beta; // save original beta value
 				for (M move : moves){
 					makeMove(move);
@@ -585,12 +595,13 @@ public abstract class Minimax<M extends Mossa> {
 			return score;
 		}
 	}
+
 	protected int alphaBetaWithMemoryScore(int d, int who, int alpha, int beta){
 		return AlphaBetaWithMemory(null,d-1,-who,alpha,beta);
 	}
     /**
      * <pre>
-     * function MTDF(root : node_type; f : integer; d: integer) : integer;
+     * function MTD-F(root : node_type; f : integer; d: integer) : integer;
 	 *     g := f;
 	 *     upperbound := +&#8734;
 	 *     lowerbound := -&#8734;
@@ -602,11 +613,11 @@ public abstract class Minimax<M extends Mossa> {
 	 *     return g;
 	 * </pre>
      * @param root
-     * @param f
      * @param d
+     * @param f
      * @return
      */
-	private int mtd(MoveWrapper<M> root, int d, int who, int f){
+	protected int MTD(MoveWrapper<M> root, int d, int who, int f){
 		int g=f;
 		int upperbound=(int)maxEvaluateValue(),lowerbound=(int)-maxEvaluateValue();
 		do {
@@ -636,8 +647,7 @@ public abstract class Minimax<M extends Mossa> {
 	 *     return bestNode
 	 */
 
-    /*
-	protected M BNS(MoveWrapper<M> node, int alfa, int beta, int quality){
+/*	protected M BNS(MoveWrapper<M> node, int alfa, int beta, int quality){
 		M bestNode=node.move;
 		int betterCount;
 		do{
@@ -657,8 +667,7 @@ public abstract class Minimax<M extends Mossa> {
 		return bestNode;
 	}
 
-	protected abstract int NextGuess(MoveWrapper<M> node, int alfa, int beta);
-    */
+	protected abstract int NextGuess(MoveWrapper<M> node, int alfa, int beta);*/
 
 	/**
      * Tell weather or not the game is over.
