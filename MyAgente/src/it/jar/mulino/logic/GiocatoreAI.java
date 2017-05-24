@@ -1,7 +1,7 @@
 package it.jar.mulino.logic;
 
-import java.util.concurrent.*;
-import java.util.concurrent.locks.*;
+//import java.util.concurrent.*;
+//import java.util.concurrent.locks.*;
 import it.jar.mulino.model.*;
 import it.jar.mulino.ricerca.*;
 import org.slf4j.*;
@@ -17,8 +17,8 @@ public class GiocatoreAI extends Giocatore implements Runnable{
     //private Stato stato;
     private NineMensMorrisSearch ricerca;
     
-    private final Lock lock = new ReentrantLock();
-    private final Condition condizioneRisposta = lock.newCondition();
+//    private final Lock lock = new ReentrantLock();
+//    private final Condition condizioneRisposta = lock.newCondition();
     private final int tempoTurno;
     private final byte colore;	//0=bianco,1=nero
     private boolean statoCambiato;
@@ -74,7 +74,7 @@ public class GiocatoreAI extends Giocatore implements Runnable{
     	}
     	logger.debug("Aggiorna lo stato");
         this.stato = stato;
-        checkMossaKiller(stato);
+        //checkMossaKiller(stato);
         statoCambiato=true;
     }
 
@@ -88,22 +88,23 @@ public class GiocatoreAI extends Giocatore implements Runnable{
 
     @Override
     public void run(){
-        int depth = 7;
+        int depth = 6;
         while(true){
             depth++;
             //esplora l'albero iterativamente per ottenere la mossa migliore
             logger.debug("Profondità "+depth+" ... ");
+            long t=System.currentTimeMillis();
 
             mossaKiller = ricerca.getBestMove(depth); //setta la mossa migliore
-            logger.debug("... mossa migliore: "+mossaKiller+" stato cambiato? "+statoCambiato);
+            logger.debug("... mossa migliore per profondità "+depth+": "+mossaKiller+" ("+(System.currentTimeMillis()-t)/1000.0+"s)\tstato cambiato? "+statoCambiato);
 
-            lock.lock();
+            //lock.lock();
             if(!statoCambiato && stato.willWin(mossaKiller)){
                 logger.debug("Con questa mossa si vince!");
                 //se vinco con quella mossa e lo stato non è cambiato allora facciamola!
-                condizioneRisposta.signal();
+                //condizioneRisposta.signal();
             }
-            lock.unlock();
+           // lock.unlock();
             //pota l'albero se lo stato attuale della partita è cambiato
             if(statoCambiato){
                 logger.debug("Lo stato è cambiato");

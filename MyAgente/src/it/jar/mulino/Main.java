@@ -46,7 +46,7 @@ public class Main {
 			if(whiteFlag)                builder.setChecker(State.Checker.WHITE);
 			if(blackFlag)                builder.setChecker(State.Checker.BLACK);
 
-			int durataTurno = 20; //60secondi
+			int durataTurno = 30; //60secondi
 			if(line.hasOption("t")){
 				try {
 					durataTurno = Integer.parseInt(line.getOptionValue("t"));

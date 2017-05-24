@@ -98,23 +98,18 @@ public class NineMensMorrisSearch extends TranspositionMinimax<Long, NineMensMor
             this.numeroPedineBianche = numeroPedineBianche;
             this.depth = depth;
         }
-
-        @Override
-        public int compareTo(GroupEntry o) {
-            if(this.faseUno && !o.faseUno) {
-                return -1; // io < altro
-            }
-            if(!this.faseUno && o.faseUno) {
-                return 1;
-            }
-            if(this.faseUno && o.faseUno){
-                return depth - o.depth;
-            }
-            if(this.numeroPedineBianche == o.numeroPedineBianche && this.numeroPedineNere == o.numeroPedineNere){
-                return depth - o.depth;
-            }else {
-                return (o.numeroPedineNere + o.numeroPedineNere) - (this.numeroPedineBianche + this.numeroPedineNere);
-            }
-        }
+		@Override
+		public int compareTo(GroupEntry o){
+			if (this.faseUno && !o.faseUno)
+				return -1; // io < altro
+			if (!this.faseUno && o.faseUno)
+				return 1;
+			if (this.faseUno)
+				return depth-o.depth;
+			if (this.numeroPedineBianche==o.numeroPedineBianche && this.numeroPedineNere==o.numeroPedineNere)
+				return depth-o.depth;
+			else
+				return (o.numeroPedineNere+o.numeroPedineNere)-(this.numeroPedineBianche+this.numeroPedineNere);
+		}
     }
 }
