@@ -9,7 +9,7 @@ import it.jar.mulino.ricerca.NineMensMorrisSearch;
  */
 public class GiocatoreAI extends Giocatore implements Runnable{
 
-    private static final long DURATA_MOSSA=20000;//58000;
+    private static final long DURATA_MOSSA=15000;//58000;
 	private Mossa mossaKiller;
     //private Stato stato;
     private NineMensMorrisSearch ricerca;
@@ -20,7 +20,7 @@ public class GiocatoreAI extends Giocatore implements Runnable{
     	super(stato);
         stato.currentPlayer = isBianco ? stato.currentPlayer : stato.opponentPlayer;
 
-        ricerca = new NineMensMorrisSearch(Minimax.Algorithm.NEGASCOUT, stato);
+        ricerca = new NineMensMorrisSearch(Minimax.Algorithm.BNS, stato);
     }
 
     /**crea uno pseudo-attore attivo*/

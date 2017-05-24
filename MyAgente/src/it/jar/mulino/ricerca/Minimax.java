@@ -133,7 +133,9 @@ public abstract class Minimax<M extends Mossa> {
             negascout(wrapper, depth, -maxEvaluateValue(), maxEvaluateValue());
             break;
         case MTD:
-            MTD(wrapper, depth, 1, maxEvaluateValue());
+            MTD(wrapper, depth, maxEvaluateValue());
+        case BNS:
+            BNS(wrapper, depth, -maxEvaluateValue(), maxEvaluateValue(), 1);
         }
         return wrapper.move;
     }
@@ -167,9 +169,8 @@ public abstract class Minimax<M extends Mossa> {
      * @return
      */
     private final double minimax(final MoveWrapper<M> wrapper, final int depth, final int who) {
-        if (depth == 0 || isOver()) {
+        if (depth == 0 || isOver())
             return who * evaluate();
-        }
         M bestMove = null;
         Collection<M> moves = getPossibleMoves();
         if (moves.isEmpty()) {
@@ -546,7 +547,7 @@ public abstract class Minimax<M extends Mossa> {
 	 *     return g;
 	 * </pre>
      */
-	protected int AlphaBetaWithMemory(MoveWrapper<M> n, int d, int who, int alpha, int beta){
+	protected int AlphaBetaWithMemory(MoveWrapper<M> out, int d, int who, int alpha, int beta){
 		if (d==0)
 			return who*(int)evaluate(); // leaf node
 		else {
@@ -571,8 +572,8 @@ public abstract class Minimax<M extends Mossa> {
 							break;
 					}
 				}
-				if (n!=null){
-					n.move=bestMove;
+				if (out!=null){
+					out.move=bestMove;
 				}
 			} else { // n is a MINNODE
 				score=maxEvaluateValue();
@@ -588,8 +589,8 @@ public abstract class Minimax<M extends Mossa> {
 							break;
 					}
 				}
-				if (n!=null){
-					n.move=bestMove;
+				if (out!=null){
+					out.move=bestMove;
 				}
 			}
 			return score;
@@ -612,17 +613,17 @@ public abstract class Minimax<M extends Mossa> {
 	 *     until lowerbound >= upperbound;
 	 *     return g;
 	 * </pre>
-     * @param root
+     * @param out
      * @param d
      * @param f
      * @return
      */
-	protected int MTD(MoveWrapper<M> root, int d, int who, int f){
+	protected int MTD(MoveWrapper<M> out, int d, int f){
 		int g=f;
 		int upperbound=(int)maxEvaluateValue(),lowerbound=(int)-maxEvaluateValue();
 		do {
 			int beta=g==lowerbound ? g+1 : g;
-			g=AlphaBetaWithMemory(root,d,who,beta-1,beta);
+			g=AlphaBetaWithMemory(out,d,1,beta-1,beta);
 			if (g<beta)
 				upperbound=g;
 			else
@@ -647,27 +648,40 @@ public abstract class Minimax<M extends Mossa> {
 	 *     return bestNode
 	 */
 
-/*	protected M BNS(MoveWrapper<M> node, int alfa, int beta, int quality){
-		M bestNode=node.move;
-		int betterCount;
-		do{
-			int test=NextGuess(node,alfa,beta);
+	protected int BNS(MoveWrapper<M> out, int d, int alfa, int beta, int quality){
+    	if (out==null)
+    		throw new IllegalArgumentException("Dove vuoi che ti metta la mossa??!?!");
+    	Collection<M> moves=getPossibleMoves();
+    	int betterCount,bestVal=alfa;
+		do {
+			int test=nextGuess(alfa,beta,moves.size());
 			betterCount=0;
-			for (Nodo child : node.move){
-				int bestVal=-AlphaBetaWithMemory(new MoveWrapper<>(child),-test,-(test-1));
+			if (moves.isEmpty()){
+				next();
+				bestVal=alphaBetaWithMemoryScore(d,-1,alfa,beta);
+				previous();
+			}
+			for (M move : moves){
+				makeMove(move);
+				bestVal=-alphaBetaWithMemoryScore(d,1,-test,1-test);///////////
+				//bestVal=alphaBetaWithMemoryScore(d,who,alfa,beta);
+				unmakeMove(move);
 				if (bestVal>=test){
 					betterCount++;
-					bestNode=child;
-					if (expectedQuality>=quality)
-						return bestNode;
-				}
+					out.move=move;
+				} else
+					moves.remove(move);
 			}
+			if (betterCount!=moves.size())
+				new InternalError("betterCount!=mosse.size").printStackTrace();
+			alfa=test;
 //			store(node.lowerbound,node.upperbound);
-		} while (!((beta-alfa<2||betterCount==1)));
-		return bestNode;
+		} while (beta-alfa>=2 && betterCount>quality);
+		return bestVal;
 	}
-
-	protected abstract int NextGuess(MoveWrapper<M> node, int alfa, int beta);*/
+	protected int nextGuess(int alfa, int beta, int figli){
+		return alfa+(beta-alfa)*(figli-1)/figli;
+	}
 
 	/**
      * Tell weather or not the game is over.
