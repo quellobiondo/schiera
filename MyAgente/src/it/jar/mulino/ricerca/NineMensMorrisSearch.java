@@ -41,6 +41,7 @@ public class NineMensMorrisSearch extends TranspositionMinimax<Long, NineMensMor
                 stato.count[NineMensMorrisSetting.PLAYER_B],
                 lastDepth);
 	}
+
 	@Override
 	public boolean isOver(){
 		return stato.isOver();
@@ -96,16 +97,22 @@ public class NineMensMorrisSearch extends TranspositionMinimax<Long, NineMensMor
             this.numeroPedineBianche = numeroPedineBianche;
             this.depth = depth;
         }
-		@Override
-		public int compareTo(GroupEntry o){
-			if (this.faseUno && !o.faseUno)
-				return -1; // io < altro
-			if (!this.faseUno && o.faseUno)
-				return 1;
-			if (this.faseUno ||(this.numeroPedineBianche==o.numeroPedineBianche && this.numeroPedineNere==o.numeroPedineNere))
-				return depth-o.depth;
-			else
-				return (o.numeroPedineNere+o.numeroPedineNere)-(this.numeroPedineBianche+this.numeroPedineNere);
-		}
+
+        @Override
+        public int compareTo(GroupEntry o) {
+            if(this.faseUno && o.faseUno) return 0;
+	    	if(this.faseUno && !o.faseUno) {
+                return -1; // io < altro
+            }
+            if(!this.faseUno && o.faseUno) {
+                return 1;
+            }
+            if(this.numeroPedineBianche != o.numeroPedineBianche && this.numeroPedineNere != o.numeroPedineNere){
+//                return depth - o.depth;
+				return 0;
+            }else {
+                return (o.numeroPedineNere + o.numeroPedineNere) - (this.numeroPedineBianche + this.numeroPedineNere);
+            }
+        }
     }
 }

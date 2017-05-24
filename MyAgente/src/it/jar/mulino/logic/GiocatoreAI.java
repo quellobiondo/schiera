@@ -5,6 +5,7 @@ import java.util.*;
 //import java.util.concurrent.locks.*;
 import it.jar.mulino.model.*;
 import it.jar.mulino.ricerca.*;
+import it.jar.mulino.utils.*;
 import org.slf4j.*;
 
 /**
@@ -22,32 +23,39 @@ public class GiocatoreAI extends Giocatore implements Runnable{
     private final int tempoTurno;
     private final byte colore;	//0=bianco,1=nero
     private boolean statoCambiato;
+    private Thread thread;
 
     private GiocatoreAI(Stato stato, boolean isBianco, int secondiTurno) {
         super(stato);
-        colore=(byte)(isBianco?0:1);
+        colore=(isBianco? NineMensMorrisSetting.PLAYER_W : NineMensMorrisSetting.PLAYER_B);
         //statoAttuale = stato;
         this.tempoTurno = secondiTurno;
-        ricerca = new NineMensMorrisSearch(Minimax.Algorithm.ALPHA_BETA, stato);
+        ricerca = new NineMensMorrisSearch(Minimax.Algorithm.BNS, stato);
     }
 
     /**crea uno pseudo-attore attivo*/
     public static GiocatoreAI create(Stato stato, boolean isBianco, int durataTurno){
-        GiocatoreAI giocatore = new GiocatoreAI(stato, isBianco, durataTurno-2);
-        Thread thread = new Thread(giocatore);
+        return new GiocatoreAI(stato, isBianco, durataTurno-2);
+    }
+
+	@Override
+	public Mossa getMossa(){
+        thread = new Thread(this);
         thread.setDaemon(true);
         thread.setName("Ai-R");
         //thread.setPriority(Thread.MAX_PRIORITY);
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         thread.start();
-        return giocatore;
-    }
-	@Override
-	public Mossa getMossa(){
+
 		logger.debug("Dammi la tua mossa entro "+tempoTurno+" s");
 		try{
 			Thread.sleep(tempoTurno*1000);
 		} catch (InterruptedException e){}
+
+		if(thread.isAlive()){
+		    thread.interrupt();
+        }
+
 		checkMossaKiller(stato);
 		logger.debug("La mia mossa killer e' "+mossaKiller);
 		return mossaKiller;
@@ -72,6 +80,8 @@ public class GiocatoreAI extends Giocatore implements Runnable{
     		System.err.println("Ho lo stato dell'altro giocatore! Mossa non controllata");
     		return;
     	}
+        List<Mossa> mossePossibili = stato.getPossibleMoves();
+        logger.debug("Mosse "+mossePossibili+" --> "+mossePossibili.contains(mossaKiller));
         if(mossaKiller==null || !stato.getPossibleMoves().contains(mossaKiller)){
             logger.error("Mossa killer "+mossaKiller+" non idonea con il nuovo stato");
             List<Mossa> mosse = stato.getPossibleMoves();

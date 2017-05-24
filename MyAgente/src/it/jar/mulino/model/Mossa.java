@@ -21,6 +21,8 @@ public class Mossa {
         this.remove = remove;
     }
 
+
+
     public Mossa(byte player, byte from, byte to) {
         this(player, from, to, Byte.MAX_VALUE);
     }
@@ -47,6 +49,10 @@ public class Mossa {
 
     public boolean isRemoveMove() {
         return this.remove != Byte.MAX_VALUE;
+    }
+
+    public void setPlayer(byte player){
+        this.player = player;
     }
 
     public Mossa inverse() {
