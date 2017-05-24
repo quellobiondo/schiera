@@ -26,7 +26,7 @@ task runServer(type: JavaExec, dependsOn: build) {
     // parametri Engine
     // 1) int timeout   : default 60
     // 2) int cacheSize : default 16
-    args 60
+    args '60'
 }
 
 task runHumanWhite(type: JavaExec, dependsOn: build) {

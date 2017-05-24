@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by ziro on 23/05/17.
  */
-public class NineMensMorrisSearch extends TranspositionMinimax<Long, NineMensMorrisSearch.GroupEntry> {
+public class NineMensMorrisSearch extends Minimax<Mossa>{ //extends TranspositionMinimax<Long, NineMensMorrisSearch.GroupEntry> {
 	private static final Logger logger = LoggerFactory.getLogger(NineMensMorrisSearch.class);
 
     private Stato stato;
@@ -26,7 +26,6 @@ public class NineMensMorrisSearch extends TranspositionMinimax<Long, NineMensMor
 		this.numeroMossa = 1;
 	}
 
-	@Override
 	public Long getTransposition(){
 		return stato.getTransposition();
 	}
@@ -39,7 +38,6 @@ public class NineMensMorrisSearch extends TranspositionMinimax<Long, NineMensMor
         return super.getBestMove(depth);
 	}
 
-        @Override
 	public GroupEntry getGroup(){
 		return new GroupEntry(!stato.phase1completed(),
                 stato.count[NineMensMorrisSetting.PLAYER_W],
@@ -79,9 +77,9 @@ public class NineMensMorrisSearch extends TranspositionMinimax<Long, NineMensMor
 		this.stato=stato;
 		// dobbiamo ripulire la trasposition table da ciò che è inutile
         // -> mossa ulteriore
-        clearGroups(getGroup()); //ripuliamo tutti i gruppi inutili
-        getTranspositionTableMap().forEach((k, v)->k.depth-=2);
-        GC.requestLatency(200);
+//        clearGroups(getGroup()); //ripuliamo tutti i gruppi inutili
+//        getTranspositionTableMap().forEach((k, v)->k.depth-=2);
+//        GC.requestLatency(200);
     }
 
 	@Override
@@ -104,17 +102,19 @@ public class NineMensMorrisSearch extends TranspositionMinimax<Long, NineMensMor
 
         @Override
         public int compareTo(GroupEntry o) {
-            if(this.faseUno && !o.faseUno) {
+            if(this.faseUno && o.faseUno) return 0;
+	    	if(this.faseUno && !o.faseUno) {
                 return -1; // io < altro
             }
             if(!this.faseUno && o.faseUno) {
                 return 1;
             }
-            if(this.faseUno && o.faseUno){
-                return depth - o.depth;
-            }
-            if(this.numeroPedineBianche == o.numeroPedineBianche && this.numeroPedineNere == o.numeroPedineNere){
-                return depth - o.depth;
+//            if(this.faseUno && o.faseUno){
+//                return depth - o.depth;
+//            }
+            if(this.numeroPedineBianche != o.numeroPedineBianche && this.numeroPedineNere != o.numeroPedineNere){
+//                return depth - o.depth;
+				return 0;
             }else {
                 return (o.numeroPedineNere + o.numeroPedineNere) - (this.numeroPedineBianche + this.numeroPedineNere);
             }

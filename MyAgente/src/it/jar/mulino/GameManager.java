@@ -50,7 +50,11 @@ public class GameManager extends MulinoClient{
     }
 
     private void turnoMio() throws IOException, ClassNotFoundException {
-        scriviMossa(giocatore.getMossa());
+    	long t=System.currentTimeMillis();
+    	Mossa m=giocatore.getMossa();
+        logger.debug("invio mossa dopo "+(System.currentTimeMillis()-t)/1000.0+" s");
+        scriviMossa(m);
+        logger.debug((System.currentTimeMillis()-t)/1000.0+" s di turno");
         currentState = leggiStato(); //leggo l'effetto della mia mossa
         currentState.next();
     }

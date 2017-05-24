@@ -46,7 +46,7 @@ public class Main {
 			if(whiteFlag)                builder.setChecker(State.Checker.WHITE);
 			if(blackFlag)                builder.setChecker(State.Checker.BLACK);
 
-			int durataTurno = 60; //60secondi
+			int durataTurno = 20; //60secondi
 			if(line.hasOption("t")){
 				try {
 					durataTurno = Integer.parseInt(line.getOptionValue("t"));
@@ -59,7 +59,8 @@ public class Main {
 			boolean giocatoreUmano = line.hasOption("h") || line.hasOption("Human");
 			if(giocatoreUmano)  builder.setGiocatore(new GiocatoreUmano(new Stato()));
 			else                builder.setGiocatore(GiocatoreAI.create(new Stato(), whiteFlag, durataTurno));
-
+			
+			Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 			logger.debug(builder.toString());
 		} catch (ParseException exp){
 			abort("Usage error: "+exp.getLocalizedMessage());

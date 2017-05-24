@@ -1,6 +1,8 @@
 package it.jar.mulino.ricerca;
 
 
+//import org.apache.commons.collections4.map.LRUMap;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +23,7 @@ public class TranspositionTable {
         public byte depth;
     }
 
-    private Map<Long, Entry> table = new HashMap<>(MAX_SIZE);//new LRUMap<Long, Entry>(MAX_SIZE);
+    private Map<Long, Entry> table = new HashMap<>();//new LRUMap<Long, Entry>(MAX_SIZE);
     private int lowerBoundHits = 0;
     private int upperBoundHits = 0;
     private int exactScoreHits = 0;
