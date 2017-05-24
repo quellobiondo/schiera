@@ -57,14 +57,9 @@ public class Main {
 
 			/**Imposto il giocatore*/
 			boolean giocatoreUmano = line.hasOption("h") || line.hasOption("Human");
-<<<<<<< HEAD
-			if(giocatoreUmano)  builder.setGiocatore(new GiocatoreUmano());
-			else                builder.setGiocatore(GiocatoreAI.create(new Stato(), whiteFlag, durataTurno));
-=======
 			if(giocatoreUmano)  builder.setGiocatore(new GiocatoreUmano(new Stato()));
-			else                builder.setGiocatore(GiocatoreAI.create(new Stato(), whiteFlag));
->>>>>>> 47f72a29bfb73adeef29b29429bc40686a6f2813
-			
+			else                builder.setGiocatore(GiocatoreAI.create(new Stato(), whiteFlag, durataTurno));
+
 			logger.debug(builder.toString());
 		} catch (ParseException exp){
 			abort("Usage error: "+exp.getLocalizedMessage());

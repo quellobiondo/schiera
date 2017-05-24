@@ -631,6 +631,7 @@ public abstract class Minimax<M extends Mossa> {
 		} while (lowerbound<upperbound);
 		return g;
 	}
+
 	/**
 	 * function BNS(node, alfa, beta, quality)
 	 *     do
@@ -647,7 +648,6 @@ public abstract class Minimax<M extends Mossa> {
 	 *     while not((beta - alfa < 2) or (betterCount = 1))
 	 *     return bestNode
 	 */
-
 	protected int BNS(MoveWrapper<M> out, int d, int alfa, int beta, int quality){
     	if (out==null)
     		throw new IllegalArgumentException("Dove vuoi che ti metta la mossa??!?!");

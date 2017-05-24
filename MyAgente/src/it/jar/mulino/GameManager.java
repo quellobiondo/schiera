@@ -46,14 +46,14 @@ public class GameManager extends MulinoClient{
     private void turnoAvversario() throws IOException, ClassNotFoundException {
         currentState = leggiStato();
         currentState.next(); //è cambiato il turno
-        giocatore.updateState(currentState.copia());
+        giocatore.aggiornaStato(currentState.copia());
     }
 
     private void turnoMio() throws IOException, ClassNotFoundException {
-        scriviMossa(giocatore.getMove());
+        scriviMossa(giocatore.getMossa());
         currentState = leggiStato(); //leggo l'effetto della mia mossa
         currentState.next();
-        giocatore.updateState(currentState.copia());
+        giocatore.aggiornaStato(currentState.copia());
     }
 
     /**Loop di gioco
@@ -65,8 +65,7 @@ public class GameManager extends MulinoClient{
         try {
             logger.debug(String.format("You are player %s!", getPlayer().toString()));
             currentState = leggiStato();
-<<<<<<< HEAD
-            giocatore.updateState(currentState);
+            giocatore.aggiornaStato(currentState);
             logger.debug(String.format("Current model: %s", currentState));
             if(getPlayer()== State.Checker.BLACK){
                 //allora deve aspettare prima la mossa dell'avversario
@@ -80,28 +79,6 @@ public class GameManager extends MulinoClient{
                 logger.debug(String.format("Effect of the move\n %s\n\n Waiting for your opponent move...", currentState));
                 turnoAvversario();
                 logger.debug(String.format("Your Opponent did his move, and the result is:\n %s", currentState));
-=======
-            giocatore.aggiornaStato(currentState);
-            System.out.println(currentState);
-            if(getPlayer()== State.Checker.BLACK){
-                //allora deve aspettare prima la mossa dell'avversario
-                currentState = leggiStato();
-                giocatore.aggiornaStato(currentState);
-            }
-
-            while (true) {
-                System.out.println("Player " + getPlayer().toString() + ", do your move: ");
-                scriviMossa(giocatore.getMossa());
-                currentState = leggiStato();
-                giocatore.aggiornaStato(currentState);
-                System.out.println("Effect of your move: ");
-                System.out.println(currentState);
-                System.out.println("Waiting for your opponent move... ");
-                currentState = leggiStato();
-                giocatore.aggiornaStato(currentState);
-                System.out.println("Your Opponent did his move, and the result is: ");
-                System.out.println(currentState);
->>>>>>> 47f72a29bfb73adeef29b29429bc40686a6f2813
             }
         }catch (IOException ex){
             ex.printStackTrace();
